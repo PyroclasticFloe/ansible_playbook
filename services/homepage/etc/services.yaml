@@ -1,0 +1,113 @@
+---
+- Media:
+    - Jellyfin:
+        href: https://jellyfin.tail044fe.ts.net
+        icon: sh-jellyfin
+        description: Music
+        ping: jellyfin.tail044fe.ts.net
+        widget:
+          type: jellyfin
+          url: https://jellyfin.tail044fe.ts.net
+          key: 8399cf6b48124cccb0ea327ee804d62a
+          enableBlocks: true # optional, defaults to false
+          enableNowPlaying: true # optional, defaults to true
+          enableUser: true # optional, defaults to false
+          enableMediaControl: false # optional, defaults to true
+          showEpisodeNumber: true # optional, defaults to false
+          expandOneStreamToTwoRows: false # optional, defaults to true
+    #- Pi Gallery 2:
+    #    icon: sh-pigallery2-light
+    #    href: https://pigallery2.tail044fe.ts.net
+    #    description: Images and Video
+    #    ping: pigallery2.tail044fe.ts.net
+    - Comfy Smart Gallery:
+        icon: /images/csg_logo.png
+        href: https://comfy-smartgallery.tail044fe.ts.net
+        description: Browses ComfyUI output files
+        ping: comfy-smartgallery.tail044fe.ts.net
+    - ComfyUI:
+        icon: /images/ComfyUI.png
+        href: https://endeavouros.tail044fe.ts.net:8188
+        description: Node-based AI image Generator
+        ping: https://endeavouros.tail044fe.ts.net:8188
+    - Open WebUI:
+        icon: open-webui
+        href: https://open-webui.tail044fe.ts.net
+        description: A UI for AI models
+        ping: https://open-webui.tail044fe.ts.net
+    - Llama-Swap:
+        icon: /images/llama-cpp-dark.png
+        href: https://llama-swap.tail044fe.ts.net
+        description: Loads AI Models
+        ping: https://llama-swap.tail044fe.ts.net
+    - Docling:
+        icon: docling
+        href: https://docling.tail044fe.ts.net
+        description: Document Converter
+        ping: https://docling.tail044fe.ts.net
+
+- System:
+    - AdGuardHome:
+        icon: sh-adguard-home
+        href: https://prodesk.tail044fe.ts.net
+        description: Ad Blocking DNS
+        ping: prodesk.tail044fe.ts.net
+        widget:
+          type: adguard
+          url: https://prodesk.tail044fe.ts.net
+          username: aria
+          password: 19462019
+    - Forgejo:
+        href: https://forgejo.tail044fe.ts.net
+        icon: forgejo
+        description: Self-Hosted Git Instance
+        ping: forgejo.tail044fe.ts.net
+    - SearXNG:
+        icon: sh-searxng
+        href: https://searxng.tail044fe.ts.net
+        description: Private Search engine
+        ping: searxng.tail044fe.ts.net
+    - VaultWarden:
+        href: https://vaultwarden.tail044fe.ts.net
+        icon: sh-vaultwarden-light
+        description: Password Manager
+        ping: vaultwarden.tail044fe.ts.net
+# - Not Currently in use
+# - Duplicati:
+#     href: https://duplicati.tail044fe.ts.net
+#     icon: sh-duplicati
+#     description: Backup
+#     ping: duplicati.tail044fe.ts.net
+# - Beszel:
+#     href: https://beszel.tail044fe.ts.net
+#     icon: sh-beszel
+#     description: System Graphs
+#     ping: beszel.tail044fe.ts.net
+# widget:
+#   type: beszel
+#   url: https://beszel.tail044fe.ts.net
+#   username: aria_forgetful@outlook.com
+#   password: 19462019
+#   version: 2 # optional, default is 1
+# Being replaced by NextCloud
+# - Radicale:
+#     href: https://radicale.tail044fe.ts.net
+#     icon: sh-radicale
+#     description: Calendar, Contacts
+# - NextCloud:
+#     href: https://nextcloud.tail044fe.ts.net
+#     icon: sh-nextcloud
+#     description: Calendar, Contacts, Etc.
+#     ping: nextcloud.tail044fe.ts.net
+#     widget:
+#         type: nextcloud
+#         url: https://nextcloud.tail044fe.ts.net
+#         username: aria
+#         password: 19462019
+# - What's Up Docker:
+#     href: https://whats-up-docker.tail044fe.ts.net
+#     icon: sh-wud
+#     description: Update Manger for Containers
+#     widget:
+#         type: whatsupdocker
+#         url: https://whats-up-docker.tail044fe.ts.net

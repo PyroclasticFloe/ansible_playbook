@@ -1,0 +1,19 @@
+[Unit]
+Description=Homepage
+
+[Container]
+Pod=homepage.pod
+
+Image=ghcr.io/gethomepage/homepage:latest
+
+Volume=/etc/local_containers/homepage:/app/config:ro,Z
+Volume=/var/lib/local_containers/homepage/config/logs:/app/config/logs:Z
+Volume=/var/lib/local_containers/homepage/images:/app/public/images:ro,Z
+
+Environment=HOMEPAGE_ALLOWED_HOSTS=homepage.tail044fe.ts.net
+Environment=LOG_TARGETS=stdout
+
+Exec=sh -c "export HOSTNAME=0.0.0.0; exec node server.js" #GitHub discussion (#5106)
+
+[Service]
+Restart=always

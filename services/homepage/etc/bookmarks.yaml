@@ -1,0 +1,32 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/bookmarks
+
+- Developer:
+    - Codeberg:
+      - abbr: CB
+        icon: codeberg
+        href: https://codeberg.org
+    - Gitlab:
+      - abbr: GL
+        icon: gitlab
+        href: https://gitlab.com
+    - Github:
+        - abbr: GH
+          icon: github-light
+          href: https://github.com/
+
+- Self Hosting:
+    - Tailscale:
+        - abbr: TS
+          icon: tailscale-light
+          href: https://login.tailscale.com/admin/machines?refreshed=true
+    - Homepage:
+        - abbr: HP
+          icon: homepage
+          href: https://gethomepage.dev/
+
+- Misc:
+    - YouTube:
+        - abbr: YT
+          href: https://youtube.com/

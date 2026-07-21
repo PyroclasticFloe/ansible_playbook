@@ -1,0 +1,116 @@
+# llama-swap configuration for 4070 Ti SUPER (16GB) + 96GB System RAM
+
+models:  
+  Qwen3.6-35B-Q4:
+    ttl: 1800
+    path: "/mnt/models/Qwen3.6-35B/Qwen3.6-35B-A3B-UD-IQ4_XS.gguf"
+    cmd: >
+      llama-server
+      -m /mnt/models/Qwen3.6-35B/Qwen3.6-35B-A3B-UD-IQ4_XS.gguf
+      --port ${PORT}
+      --fit on
+      -np 1
+      --cont-batching
+      --ctx-size 131072
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --flash-attn on
+      -b 2048
+      -ub 1024
+      --no-mmap
+      --image-min-tokens 1024
+      --no-mmproj-offload
+      --mmproj /mnt/models/Qwen3.6-35B/mmproj-F16.gguf
+      --jinja
+      --chat-template-file /mnt/models/Qwen3.6-35B/custom_pub_chat_template_qwen36.jinja
+
+  Qwen3.6-35B-Q6:
+    ttl: 1800
+    path: "/mnt/models/Qwen3.6-35B/Qwen_Qwen3.6-35B-A3B-Q6_K_L.gguf"
+    cmd: >
+      llama-server
+      -m /mnt/models/Qwen3.6-35B/Qwen_Qwen3.6-35B-A3B-Q6_K_L.gguf
+      --port ${PORT}
+      --fit on
+      -np 1
+      --cont-batching
+      --ctx-size 131072
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --flash-attn on
+      -b 2048
+      -ub 1024
+      --no-mmap
+      --temperature 0.6
+      --top-p 0.95
+      --top-k 20
+      --jinja
+      --chat-template-file /mnt/models/Qwen3.6-35B/070226_chat_template.jinja
+
+  Gemma4-12B-Heretic:
+    ttl: 1800
+    path: "/mnt/models/Gemma4-12B/ggemma-4-12B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf"
+    cmd: >
+      llama-server
+      -m /mnt/models/Gemma4-12B/gemma-4-12B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf
+      --port ${PORT}
+      -ngl -1
+      -np 1
+      --cont-batching
+      --ctx-size 131072
+      --flash-attn on
+      -b 2048
+      -ub 1024
+      --jinja
+      --chat-template-file /mnt/models/Gemma4-12B/custom_pub_chat_template_gemma4.jinja
+      --no-mmproj-offload
+      --mmproj  /mnt/models/Gemma4-12B/gemma-4-12B-it-qat-q4_0-uncensored-heretic-mmproj-BF16.gguf
+
+  Gemma4-26B-Q4-QAT:
+    ttl: 1800
+    path: "/mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf"
+    cmd: >
+      llama-server
+      -m /mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf
+      --port ${PORT}
+      --fit on
+      -np 1
+      --no-mmap
+      --cont-batching
+      --ctx-size 65536
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --flash-attn on
+      -b 2048
+      -ub 1024
+      --jinja
+      --chat-template-file /mnt/models/Gemma4-12B/custom_pub_chat_template_gemma4.jinja
+      --no-mmproj-offload
+      --mmproj  /mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-mmproj-BF16.gguf
+
+  Gemma4-26B-long-ctx:
+    ttl: 1800
+    path: "/mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf"
+    cmd: >
+      llama-server
+      -m /mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf
+      --port ${PORT}
+      --fit on
+      -np 1
+      --no-mmap
+      --cont-batching
+      --ctx-size 524288
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --flash-attn on
+      -b 2048
+      -ub 1024
+      --jinja
+      --chat-template-file /mnt/models/Gemma4-12B/custom_pub_chat_template_gemma4.jinja
+      --no-mmproj-offload
+      --mmproj  /mnt/models/Gemma4-26B/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-mmproj-BF16.gguf
+      --rope-scaling yarn
+      --rope-freq-base 10000000
+      --yarn-orig-ctx 262144
+      --yarn-ext-factor 2.0
+      --no-kv-offload

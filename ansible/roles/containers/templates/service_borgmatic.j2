@@ -1,0 +1,33 @@
+source_directories:
+    - /var/lib/local_containers/{{ service_name }}
+
+repositories:
+    - path: ssh://de5097@de5097.rsync.net/./{{ service_name }}
+      label: {{ service_name }}
+
+encryption_passphrase: ""
+remote_path: borg14
+
+compression: auto,zstd
+
+ssh_command: ssh -i /root/.ssh/prodesk_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+
+keep_within: 2d
+keep_daily: 14
+keep_weekly: 8
+keep_monthly: 6
+
+checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks
+
+commands:
+    - before: action
+      when: [create]
+      run:
+          - docker compose -f /home/aria/docker/{{ service_name }}/compose.yaml stop {{ service_name }}
+    - after: action
+      when: [create]
+      run:
+          - docker compose -f /home/aria/docker/{{ service_name }}/compose.yaml start {{ service_name }}

@@ -1,0 +1,21 @@
+[Unit]
+Description=homarr
+After=network-online.target
+Wants=network-online.target
+
+[Container]
+Pod=homarr.pod
+
+Image= ghcr.io/homarr-labs/homarr:latest
+
+# I think podman can provide a docker socket.
+Volume=/var/run/docker.sock:/var/run/docker.sock:ro,z
+Volume=/var/lib/local_containers/homarr/appdata:/appdata:Z
+
+# Needs a SECRET_ENCRYPTION_KEY= in the environment
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

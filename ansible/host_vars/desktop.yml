@@ -1,0 +1,6 @@
+enabled_services:
+  - searxng
+  - homepage
+  - llama-swap
+
+ansible_python_interpreter: /usr/bin/python3

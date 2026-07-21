@@ -1,0 +1,19 @@
+---
+service_dir: "{{ playbook_dir }}/../services/{{ service_name }}"
+
+etc_dir: "/etc/local_containers/{{ service_name }}"
+quadlet_dir: "/etc/containers/systemd/{{ service_name }}"
+var_dir: "/var/lib/local_containers/{{ service_name }}"
+
+service_config_src: "{{ service_dir }}/etc"
+service_var_src: "{{ service_dir }}/var"
+quadlet_src: "{{ service_dir }}/quadlets"
+
+tailscale_dir: "{{ etc_dir }}/tailscale"
+serve_json: "{{ tailscale_dir }}/serve.json"
+tailscale_state_dir: "/var/lib/tailscale/{{ service_name }}"
+tailscale_env_file: "{{ tailscale_dir }}/env"
+tailscale_auth_key_file: "{{ playbook_dir }}/../../tailscale.env"
+tailscale_auth_key: "{{ lookup('ansible.builtin.file', tailscale_auth_key_file) }}"
+
+pod_enabled: true

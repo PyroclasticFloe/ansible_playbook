@@ -1,0 +1,5 @@
+tailscale: true
+enable: true
+
+runtime_directories:
+  - config/logs

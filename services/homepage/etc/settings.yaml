@@ -1,0 +1,14 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/settings/
+
+providers:
+  openweathermap: openweathermapapikey
+  weatherapi: 08161cb85c117fae5e444075bfe4c307
+
+background: 
+  #image: /images/dark_leaves.jpg
+  image: /images/america_2026_jeff_wheeler.jpg
+  blur: xs
+  
+cardBlur: md #cardBlur: xs # xs, md, etc... see https://tailwindcss.com/docs/backdrop-blur

@@ -1,0 +1,10 @@
+[Unit]
+Description=SearXNG Pod
+
+[Pod]
+PodName=searxng
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

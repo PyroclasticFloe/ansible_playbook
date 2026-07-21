@@ -1,0 +1,33 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- resources:
+    cpu: true
+    memory: true
+    disk: 
+        - /
+        # - /home/aria/ai
+        # - /home/aria/share
+
+# - search:
+#     provider: duckduckgo
+#     target: _blank
+
+- openweathermap:
+    label: Whiteville, NC
+    latitude: 34.345703
+    longitude: -78.708115
+    units: imperial
+    provider: openweathermap
+    apiKey: 08161cb85c117fae5e444075bfe4c307 
+    cache: 5 # Time in minutes to cache API responses, to stay within limits
+    format: # optional, Intl.NumberFormat options
+      maximumFractionDigits: 1
+
+- datetime:
+    textsize: x1
+    format:
+        timeStyle: long
+        dateStyle: long
+        hour12: true

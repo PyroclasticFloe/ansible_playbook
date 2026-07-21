@@ -1,0 +1,10 @@
+[Unit]
+Description=Jellyfin Pod
+
+[Pod]
+PodName=jellyfin
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

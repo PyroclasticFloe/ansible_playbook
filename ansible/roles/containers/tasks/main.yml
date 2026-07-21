@@ -1,0 +1,40 @@
+---
+- name: Load service defaults
+  ansible.builtin.include_vars:
+    file: "{{ service_dir }}/defaults.yml"
+
+- name: Compute systemd units for this service
+  ansible.builtin.set_fact:
+    systemd_units: >-
+      {{
+        (
+          ([service_name ~ "-pod"] if (pod_enabled | default(false)) else [])
+          + [service_name]
+          + (
+              sidecars
+              | default([])
+              | map('regex_replace', '^(.*)$', service_name ~ '-\\1')
+              | list
+            )
+          + ([service_name ~ "-tailscale"] if (tailscale | default(false)) else [])
+        )
+      }}
+
+- name: Install service configuration
+  ansible.builtin.include_tasks: install_service.yml
+
+- name: Install runtime data
+  ansible.builtin.include_tasks: install_var.yml
+
+- name: Install quadlets
+  ansible.builtin.include_tasks: install_quadlets.yml
+
+- name: Install sidecar
+  ansible.builtin.include_tasks: install_sidecar.yml
+  when: tailscale | default(false)
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Manage systemd service
+  ansible.builtin.include_tasks: systemd.yml

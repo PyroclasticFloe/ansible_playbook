@@ -1,0 +1,27 @@
+---
+- name: Install containers
+  hosts: desktop1
+  become: true
+
+  tasks:
+    - name: Install each container service
+      ansible.builtin.include_role:
+        name: containers
+      vars:
+        service_name: "{{ service }}"
+      loop: "{{ enabled_services }}"
+      loop_control:
+        loop_var: service
+
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: true
+      when: (changed_units | default([])) | length > 0
+
+    - name: Restart services with changed configuration
+      ansible.builtin.systemd:
+        name: "{{ unit }}"
+        state: restarted
+      loop: "{{ (changed_units | default([])) | unique }}"
+      loop_control:
+        loop_var: unit
