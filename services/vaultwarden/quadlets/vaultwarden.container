@@ -6,7 +6,7 @@ Wants=network-online.target
 [Container]
 Pod=vaultwarden.pod
 
-Image=vaultwarden/server:latest
+Image=docker.io/vaultwarden/server:latest
 
 Volume=/var/lib/local_containers/vaultwarden/data/:/data:Z
 

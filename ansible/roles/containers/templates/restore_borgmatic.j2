@@ -1,0 +1,18 @@
+repositories:
+    - path: {{ restore_from_repo }}
+      label: {{ restore_from_label }}
+
+encryption_passphrase: "{{ vault_backup_passphrases[restore_from_label] | default('') }}"
+remote_path: "{{ borg_remote_path | default('borg14') }}"
+
+ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+
+keep_within: 2d
+keep_daily: 14
+keep_weekly: 8
+keep_monthly: 6
+
+checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks

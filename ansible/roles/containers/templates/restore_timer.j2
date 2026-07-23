@@ -1,0 +1,10 @@
+[Unit]
+Description={{ service_name }} restore timer
+
+[Timer]
+OnCalendar=*-*-* {{ restore_time }}
+Persistent=true
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target

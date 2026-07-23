@@ -1,0 +1,10 @@
+[Unit]
+Description={{ service_name }} backup timer
+
+[Timer]
+OnCalendar={{ backup_time | default('03:00') }}
+Persistent=true
+RandomizedDelaySec=5m
+
+[Install]
+WantedBy=timers.target

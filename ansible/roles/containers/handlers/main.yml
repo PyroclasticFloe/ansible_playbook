@@ -2,3 +2,7 @@
 - name: Restart service
   ansible.builtin.set_fact:
     changed_units: "{{ (changed_units | default([])) + systemd_units }}"
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true

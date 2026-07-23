@@ -1,0 +1,12 @@
+[Unit]
+Description=Restore {{ service_name }} from backup
+Wants=network-online.target
+After=network-online.target
+
+ConditionACPower=true
+
+[Service]
+Type=oneshot
+
+ExecStartPre=sleep 1m
+ExecStart=/usr/bin/borgmatic extract --config /etc/borgmatic/borgmatic.d/restore_{{ service_name }}.yaml --archive latest --destination {{ var_dir }} --strip-components {{ strip_components }}

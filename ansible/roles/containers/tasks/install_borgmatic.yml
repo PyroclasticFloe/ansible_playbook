@@ -1,0 +1,214 @@
+---
+- name: Install borgmatic and borg
+  ansible.builtin.dnf:
+    name:
+      - borgmatic
+      - borgbackup
+    state: present
+
+- name: Create borgmatic config directory
+  ansible.builtin.file:
+    path: /etc/borgmatic/borgmatic.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create root .ssh directory
+  ansible.builtin.file:
+    path: /root/.ssh
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Install automation SSH key for root (automation key must exist in user's .ssh)
+  ansible.builtin.copy:
+    src: "{{ ansible_facts['user_dir'] }}/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa"
+    dest: "/root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa"
+    owner: root
+    group: root
+    mode: "0600"
+  when: lookup('ansible.builtin.file', ansible_facts['user_dir'] + '/.ssh/' + inventory_hostname + '_rsync_net_ecdsa', errors='ignore') is not none
+  notify: Reload systemd
+
+- name: Create borgmatic config for services needing backup
+  ansible.builtin.template:
+    src: service_borgmatic.j2
+    dest: "/etc/borgmatic/borgmatic.d/{{ inventory_hostname }}-{{ service_name }}.yaml"
+    owner: root
+    group: root
+    mode: "0600"
+  when: needs_backup | default(true)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    service_dir: "{{ playbook_dir }}/../services/{{ svc.name if svc is mapping else svc }}"
+    var_dir: "/var/lib/local_containers/{{ svc.name if svc is mapping else svc }}"
+    needs_backup: "{{ svc.needs_backup | default(true) if svc is mapping else true }}"
+  notify: Reload systemd
+
+- name: Create borgmatic host backup config
+  ansible.builtin.template:
+    src: backup_host_service.j2
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-host.service"
+    owner: root
+    group: root
+    mode: "0644"
+  vars:
+    host_name: "{{ inventory_hostname }}"
+  notify: Reload systemd
+
+- name: Create borgmatic host backup timer
+  ansible.builtin.copy:
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-host.timer"
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      [Unit]
+      Description={{ inventory_hostname }} host backup timer
+
+      [Timer]
+      OnCalendar=*-*-* {{ backup_time }}
+      Persistent=true
+      RandomizedDelaySec=5m
+
+      [Install]
+      WantedBy=timers.target
+  notify: Reload systemd
+
+- name: Create borgmatic service timers for services needing backup
+  ansible.builtin.template:
+    src: backup_timer.j2
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-{{ service_name }}.timer"
+    owner: root
+    group: root
+    mode: "0644"
+  when: needs_backup | default(true)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    needs_backup: "{{ svc.needs_backup | default(true) if svc is mapping else true }}"
+    backup_frequency: "{{ svc.backup_frequency | default('1 day') if svc is mapping else '1 day' }}"
+  notify: Reload systemd
+
+- name: Create borgmatic service units for services needing backup
+  ansible.builtin.template:
+    src: backup_container_service.j2
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-{{ service_name }}.service"
+    owner: root
+    group: root
+    mode: "0644"
+  when: needs_backup | default(true)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    needs_backup: "{{ svc.needs_backup | default(true) if svc is mapping else true }}"
+  notify: Reload systemd
+
+- name: Compute service names for borgmatic units
+  ansible.builtin.set_fact:
+    borgmatic_service_names: "{{ borgmatic_service_names | default([]) + [(svc.name if svc is mapping else svc)] }}"
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+  when: (svc.needs_backup | default(true)) if svc is mapping else true
+
+- name: Enable and start borgmatic timers
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop: >
+    {{
+      ['borgmatic-' + inventory_hostname + '-host.timer'] +
+      (borgmatic_service_names
+       | map('regex_replace', '^', 'borgmatic-' + inventory_hostname + '-')
+       | map('regex_replace', '$', '.timer')
+       | list
+      )
+    }}
+  notify: Reload systemd
+
+- name: Create restore borgmatic config for services needing restore
+  ansible.builtin.template:
+    src: restore_borgmatic.j2
+    dest: "/etc/borgmatic/borgmatic.d/restore_{{ service_name }}.yaml"
+    owner: root
+    group: root
+    mode: "0600"
+  when: needs_restore | default(false)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    var_dir: "/var/lib/local_containers/{{ svc.name if svc is mapping else svc }}"
+    needs_restore: "{{ svc.needs_restore | default(false) if svc is mapping else false }}"
+    restore_from_repo: "{{ svc.restore_from_repo | default('') if svc is mapping else '' }}"
+    restore_from_label: "{{ svc.restore_from_label | default('') if svc is mapping else '' }}"
+  notify: Reload systemd
+
+- name: Create restore systemd service for services needing restore
+  ansible.builtin.template:
+    src: restore_service.j2
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-{{ service_name }}-restore.service"
+    owner: root
+    group: root
+    mode: "0644"
+  when: needs_restore | default(false)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    var_dir: "/var/lib/local_containers/{{ svc.name if svc is mapping else svc }}"
+    needs_restore: "{{ svc.needs_restore | default(false) if svc is mapping else false }}"
+    strip_components: "{{ (var_dir | split('/') | length) - 1 }}"
+  notify: Reload systemd
+
+- name: Create restore timer for services needing restore
+  ansible.builtin.template:
+    src: restore_timer.j2
+    dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-{{ service_name }}-restore.timer"
+    owner: root
+    group: root
+    mode: "0644"
+  when: needs_restore | default(false)
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+    label: "{{ svc.name if svc is mapping else svc }}"
+  vars:
+    service_name: "{{ svc.name if svc is mapping else svc }}"
+    needs_restore: "{{ svc.needs_restore | default(false) if svc is mapping else false }}"
+    restore_time: "{{ svc.restore_time | default('04:00') if svc is mapping else '04:00' }}"
+  notify: Reload systemd
+
+- name: Compute service names for restore timers
+  ansible.builtin.set_fact:
+    restore_service_names: "{{ restore_service_names | default([]) + [(svc.name if svc is mapping else svc)] }}"
+  loop: "{{ enabled_services }}"
+  loop_control:
+    loop_var: svc
+  when: (svc.needs_restore | default(false)) if svc is mapping else false
+
+- name: Enable and start restore timers
+  ansible.builtin.systemd:
+    name: "borgmatic-{{ inventory_hostname }}-{{ item }}-restore.timer"
+    enabled: true
+    state: started
+  loop: "{{ restore_service_names | default([]) }}"
+  notify: Reload systemd

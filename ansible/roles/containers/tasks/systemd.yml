@@ -7,7 +7,7 @@
   ansible.builtin.systemd:
     name: "{{ unit }}"
     enabled: true
-    state: started
+    state: "{{ 'started' if start_service else 'stopped' }}"
   loop: "{{ systemd_units }}"
   loop_control:
     loop_var: unit
