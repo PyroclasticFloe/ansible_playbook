@@ -1,0 +1,16 @@
+[Unit]
+Description=Jellyfin
+
+[Container]
+Pod=jellyfin.pod
+
+Image=docker.io/jellyfin/jellyfin
+
+Volume=/etc/local_containers/jellyfin/:/config:Z # Jellyfin writes its own config
+Volume=/var/lib/local_containers/jellyfin/cache:/cache:Z
+Volume=/home/aria/share/music:/media:ro,Z # Should this be private?
+
+Environment=JELLYFIN_PublishedServerUrl=https://jellyfin.tail044fe.ts.net
+
+[Service]
+Restart=always

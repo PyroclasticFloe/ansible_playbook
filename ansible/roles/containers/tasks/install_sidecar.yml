@@ -1,0 +1,54 @@
+---
+- name: Check for Tailscale serve configuration
+  ansible.builtin.stat:
+    path: "{{ service_dir }}/etc/tailscale/serve.json"
+  register: tailscale_serve
+
+- name: Fail if Tailscale serve.json is missing
+  ansible.builtin.fail:
+    msg: >
+      Service '{{ service_name }}' has tailscale: true,
+      but {{ service_dir }}/etc/tailscale/serve.json does not exist.
+  when: not tailscale_serve.stat.exists
+
+- name: Fail if Tailscale auth key is empty
+  ansible.builtin.assert:
+    that:
+      - tailscale_auth_key | trim | length > 0
+    fail_msg: >
+      tailscale_auth_key is empty. Check that {{ tailscale_auth_key_file }} exists
+      and contains a valid Tailscale auth key.
+
+- name: Create Tailscale state directory
+  ansible.builtin.file:
+    path: "{{ tailscale_state_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+- name: Create Tailscale configuration directory
+  ansible.builtin.file:
+    path: "{{ tailscale_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Render Tailscale Quadlet
+  ansible.builtin.template:
+    src: tailscale.container.j2
+    dest: "{{ quadlet_dir }}/{{ service_name | default(name) }}-tailscale.container"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart service
+
+- name: Render Tailscale environment
+  ansible.builtin.template:
+    src: tailscale.env.j2
+    dest: "{{ tailscale_env_file }}"
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Restart service

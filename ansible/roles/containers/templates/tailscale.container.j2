@@ -1,0 +1,31 @@
+[Unit]
+Description=Tailscale sidecar for {{ service_name }}
+{% if pod_enabled | default(true) %}
+Requires={{ service_name }}-pod.service
+After={{ service_name }}-pod.service
+{% endif %}
+
+[Container]
+{% if pod_enabled | default(true) %}
+Pod={{ service_name }}.pod
+{% endif %}
+Image=docker.io/tailscale/tailscale:latest
+
+ContainerName={{ service_name }}-tailscale
+
+EnvironmentFile={{ tailscale_dir }}/env
+
+Volume={{ tailscale_state_dir }}:/var/lib/tailscale:Z
+
+Volume={{ tailscale_dir }}/serve.json:/config/serve.json:ro,Z
+
+AddCapability=NET_ADMIN
+AddCapability=NET_RAW
+
+AddDevice=/dev/net/tun
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target

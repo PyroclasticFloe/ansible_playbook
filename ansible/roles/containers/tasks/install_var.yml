@@ -1,0 +1,29 @@
+---
+- name: Create runtime directory
+  ansible.builtin.file:
+    path: "{{ var_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Create additional runtime directories
+  ansible.builtin.file:
+    path: "{{ var_dir }}/{{ runtime_dir.path if runtime_dir is mapping else runtime_dir }}"
+    state: directory
+    owner: "{{ runtime_dir.get('owner', 'root') if runtime_dir is mapping else 'root' }}"
+    group: "{{ runtime_dir.get('group', 'root') if runtime_dir is mapping else 'root' }}"
+    mode: "0755"
+  loop: "{{ runtime_directories | default([]) }}"
+  loop_control:
+    loop_var: runtime_dir
+
+- name: Seed runtime directory
+  ansible.builtin.copy:
+    src: "{{ service_var_src }}/"
+    dest: "{{ var_dir }}/"
+    owner: root
+    group: root
+    mode: preserve
+    force: false
+  when: runtime_copy | default(true)

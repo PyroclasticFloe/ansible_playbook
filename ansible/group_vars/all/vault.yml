@@ -1,0 +1,16 @@
+---
+# Fill in real values, then encrypt this file before pushing:
+#   ansible-vault encrypt ansible/group_vars/all/vault.yml
+# Edit it afterwards with:
+#   ansible-vault edit ansible/group_vars/all/vault.yml
+
+# One entry per repository, keyed by "<inventory_hostname>-<service_name>"
+# (matches the repo label in service_borgmatic.j2). Leave a repo's value as
+# "" for a passphrase-free repo. Any repo/service not listed here also
+# defaults to "" via the template's `| default('')`.
+vault_backup_passphrases:
+  desktop-vaultwarden: ""
+  desktop-forgejo: ""
+
+# homarr's SECRET_ENCRYPTION_KEY, rendered into services/homarr/env.j2
+vault_homarr_secret_encryption_key: ""

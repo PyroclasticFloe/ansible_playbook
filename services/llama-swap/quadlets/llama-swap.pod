@@ -1,0 +1,10 @@
+[Unit]
+Description=llama-swap Pod
+
+[Pod]
+PodName=llama-swap
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

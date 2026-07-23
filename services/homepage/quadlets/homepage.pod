@@ -1,0 +1,10 @@
+[Unit]
+Description=Homepage Pod
+
+[Pod]
+PodName=homepage
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

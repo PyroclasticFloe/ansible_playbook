@@ -1,0 +1,10 @@
+[Unit]
+Description=VaultWarden Pod
+
+[Pod]
+PodName=vaultwarden
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

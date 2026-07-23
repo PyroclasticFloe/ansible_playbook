@@ -1,0 +1,17 @@
+---
+- name: Create quadlet directory
+  ansible.builtin.file:
+    path: "/etc/containers/systemd/{{ service_name }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install quadlet files
+  ansible.builtin.copy:
+    src: "{{ service_dir }}/quadlets/"
+    dest: "{{ quadlet_dir }}/"
+    owner: root
+    group: root
+    mode: preserve
+  notify: Restart service

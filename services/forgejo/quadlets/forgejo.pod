@@ -1,0 +1,10 @@
+[Unit]
+Description=Forgejo Pod
+
+[Pod]
+PodName=forgejo
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

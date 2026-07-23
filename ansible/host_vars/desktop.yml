@@ -1,0 +1,9 @@
+enabled_services:
+  - searxng
+  - homepage
+  - llama-swap
+  - name: vaultwarden
+    needs_backup: false
+    restore_from_repo: "ssh://de5097@de5097.rsync.net/./vaultwarden"
+    restore_from_label: "prodesk-vaultwarden"
+ansible_python_interpreter: /usr/bin/python3

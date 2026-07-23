@@ -1,0 +1,10 @@
+[Unit]
+Description=Homarr Pod
+
+[Pod]
+PodName=homarr
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

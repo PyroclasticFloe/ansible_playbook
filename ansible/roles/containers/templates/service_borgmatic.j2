@@ -1,0 +1,35 @@
+source_directories:
+    - {{ var_dir }}
+
+repositories:
+    - path: ssh://{{ rsync_net_login }}/./{{ inventory_hostname }}-{{ service_name }}
+      label: {{ inventory_hostname }}-{{ service_name }}
+
+encryption_passphrase: "{{ vault_backup_passphrases[inventory_hostname ~ '-' ~ service_name] | default('') }}"
+remote_path: "{{ borg_remote_path | default('borg14') }}"
+
+compression: auto,zstd
+
+ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+
+keep_within: 2d
+keep_daily: 14
+keep_weekly: 8
+keep_monthly: 6
+
+checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks
+
+commands:
+    - before: action
+      when: [create]
+      run:
+          # Stopping just the container (not the whole pod) is enough to
+          # quiesce writes to var_dir, and keeps the pod network/sidecars up.
+          - systemctl stop {{ service_name }}.service
+    - after: action
+      when: [create]
+      run:
+          - systemctl start {{ service_name }}.service

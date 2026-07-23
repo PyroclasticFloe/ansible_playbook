@@ -1,0 +1,26 @@
+[Unit]
+Description=llama-swap
+StartLimitIntervalSec=30
+StartLimitBurst=10
+After=nvidia-device-init.service
+Requires=nvidia-device-init.service
+
+[Container]
+Pod=llama-swap.pod
+
+Image=ghcr.io/mostlygeek/llama-swap:cuda-non-root
+
+Volume=/home/aria/ai/models/llm/GGUF:/mnt/models:ro,z
+Volume=/etc/local_containers/llama-swap:/config:z
+Volume=/etc/local_containers/llama-swap/config.yaml:/app/config.yaml:z
+
+AddDevice=nvidia.com/gpu=all
+
+HealthCmd=nvidia-smi || exit 1
+HealthInterval=30s
+HealthTimeout=10s
+HealthRetries=3
+
+[Service]
+Restart=always
+RestartSec=5
