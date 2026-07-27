@@ -16,6 +16,8 @@ Volume=/var/lib/local_containers/searxng/cache:/var/cache/searxng:Z
 
 Environment=FORCE_OWNERSHIP=false
 
+AutoUpdate=registry
+
 [Service]
 Restart=always
 

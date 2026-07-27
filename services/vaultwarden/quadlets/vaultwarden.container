@@ -12,6 +12,8 @@ Volume=/var/lib/local_containers/vaultwarden/data/:/data:Z
 
 Environment=DOMAIN=https://vaultwarden.tail044fe.ts.net/
 
+AutoUpdate=registry
+
 [Service]
 Restart=always
 

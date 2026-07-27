@@ -15,5 +15,7 @@ Environment=LOG_TARGETS=stdout
 
 Exec=sh -c "export HOSTNAME=0.0.0.0; exec node server.js" #GitHub discussion (#5106)
 
+AutoUpdate=registry
+
 [Service]
 Restart=always

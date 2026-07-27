@@ -17,6 +17,8 @@ Environment=USER_GID=1000
 Environment=FORGEJO__server__ROOT_URL=https://forgejo.tail044fe.ts.net
 Environment=FORGEJO__server__SSH_DOMAIN=forgejo.tail044fe.ts.net
 
+AutoUpdate=registry
+
 [Service]
 Restart=always
 
