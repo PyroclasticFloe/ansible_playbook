@@ -6,3 +6,39 @@
   ansible.builtin.dnf:
     name: "{{ cli_packages }}"
     state: present
+
+- name: Include GUI package list
+  ansible.builtin.include_vars: gui.yml
+  when: is_gui | default(false)
+
+- name: Import Microsoft GPG key for VS Code
+  ansible.builtin.rpm_key:
+    key: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+  when: is_gui | default(false)
+
+- name: Add VS Code repository
+  ansible.builtin.copy:
+    dest: /etc/yum.repos.d/vscode.repo
+    content: |
+      [code]
+      name=Visual Studio Code
+      baseurl=https://packages.microsoft.com/yumrepos/vscode
+      enabled=1
+      autorefresh=1
+      type=rpm-md
+      gpgcheck=1
+      gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+  when: is_gui | default(false)
+
+- name: Install GUI packages
+  ansible.builtin.dnf:
+    name: "{{ gui_packages }}"
+    state: present
+  when: is_gui | default(false)
+
+- name: Remove plasma-discover-packagekit
+  ansible.builtin.dnf:
+    name: plasma-discover-packagekit
+    state: absent
+  when: is_gui | default(false)

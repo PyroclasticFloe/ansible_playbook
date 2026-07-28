@@ -1,13 +1,13 @@
 ---
 cli_packages:
   - tailscale
-  - borg
+  - borgbackup
   - borgmatic
   - micro
   - uv
   - btop
   - duf
-  - dust
+  - du-dust
   - ripgrep
   - rsync
   - rclone

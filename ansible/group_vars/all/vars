@@ -8,3 +8,6 @@ backup_time: "03:00"
 # de5097@de5097.rsync.net style login. Set per-environment; not secret by
 # itself, but pair it with the SSH key at /root/.ssh/<hostname>_rsync_net_ecdsa
 rsync_net_login: "de5097@de5097.rsync.net"
+
+# Whether this host gets GUI packages (steam, code, etc.)
+is_gui: false

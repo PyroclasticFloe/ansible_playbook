@@ -1,0 +1,6 @@
+---
+gui_packages:
+  - steam
+  - gwenview
+  - code
+  - krdc
