@@ -77,3 +77,31 @@
     name: akmod-nvidia
     state: present
   when: is_nvidia | default(false)
+
+- name: Add Nvidia Container Toolkit COPR repository
+  ansible.builtin.copy:
+    dest: /etc/yum.repos.d/copr-ai-ml-nvidia-container-toolkit.repo
+    content: |
+      [copr:copr.fedorainfracloud.org:group_ai-ml:nvidia-container-toolkit]
+      name=Copr repo for nvidia-container-toolkit owned by @ai-ml
+      baseurl=https://download.copr.fedorainfracloud.org/results/@ai-ml/nvidia-container-toolkit/fedora-$releasever-$basearch/
+      type=rpm-md
+      skip_if_unavailable=True
+      gpgcheck=1
+      gpgkey=https://download.copr.fedorainfracloud.org/results/@ai-ml/nvidia-container-toolkit/pubkey.gpg
+      repo_gpgcheck=0
+      enabled=1
+      enabled_metadata=1
+  when: is_nvidia | default(false)
+
+- name: Install Nvidia Container Toolkit
+  ansible.builtin.dnf:
+    name:
+      - nvidia-container-toolkit
+      - nvidia-container-toolkit-selinux
+    state: present
+  when: is_nvidia | default(false)
+
+- name: Add Nvidia Container Toolkit COPR repository
+  ansible.builtin.copy:
+    dest: /etc
