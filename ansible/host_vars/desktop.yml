@@ -1,7 +1,6 @@
 enabled_services:
   - searxng
   - homepage
-  - llama-swap
   - name: vaultwarden
     needs_backup: false
     start_service: false
