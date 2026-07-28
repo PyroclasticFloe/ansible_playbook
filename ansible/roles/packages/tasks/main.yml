@@ -1,4 +1,9 @@
 ---
+- name: Upgrade all dnf packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
 - name: Include CLI package list
   ansible.builtin.include_vars: cli.yml
 
@@ -52,6 +57,13 @@
     name: flathub
     state: present
     flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+  when: is_gui | default(false)
+
+- name: Update all Flatpak packages
+  ansible.builtin.command:
+    cmd: flatpak update -y --system
+  register: flatpak_update
+  changed_when: '"Nothing to do" not in flatpak_update.stdout'
   when: is_gui | default(false)
 
 - name: Install Flatpak packages
