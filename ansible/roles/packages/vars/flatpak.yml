@@ -4,6 +4,6 @@ flatpak_packages:
   - com.vysp3r.ProtonPlus
   - dev.zed.Zed
   - io.github.ilya_zlobintsev.LACT
-  - com.github.ungoogled_software.ungoogled_chromium
+  - io.github.ungoogled_software.ungoogled_chromium
   - io.sourceforge.pysolfc.PySolFC
   - net.waterfox.waterfox
