@@ -11,3 +11,6 @@ rsync_net_login: "de5097@de5097.rsync.net"
 
 # Whether this host gets GUI packages (steam, code, etc.)
 is_gui: false
+
+# Whether this host has an Nvidia GPU (installs akmod-nvidia)
+is_nvidia: false
