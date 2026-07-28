@@ -42,3 +42,20 @@
     name: plasma-discover-packagekit
     state: absent
   when: is_gui | default(false)
+
+- name: Include Flatpak package list
+  ansible.builtin.include_vars: flatpak.yml
+  when: is_gui | default(false)
+
+- name: Add Flathub remote
+  community.general.flatpak_remote:
+    name: flathub
+    state: present
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+  when: is_gui | default(false)
+
+- name: Install Flatpak packages
+  community.general.flatpak:
+    name: "{{ flatpak_packages }}"
+    state: present
+  when: is_gui | default(false)
