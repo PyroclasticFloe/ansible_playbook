@@ -7,7 +7,7 @@ repositories:
     - path: ssh://{{ rsync_net_login }}/./{{ inventory_hostname }}_host
       label: {{ inventory_hostname }}-host
 
-encryption_passphrase: ""
+encryption_passphrase: "{{ vault_backup_passphrases[inventory_hostname ~ '-host'] | default('') }}"
 remote_path: "{{ borg_remote_path | default('borg14') }}"
 
 ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
