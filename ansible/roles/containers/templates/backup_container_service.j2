@@ -48,4 +48,4 @@ Restart=no
 LogRateLimitIntervalSec=0
 
 ExecStartPre=sleep 1m
-ExecStart=systemd-inhibit --who="borgmatic" --what="sleep:shutdown" --why="Prevent interrupting scheduled backup" /usr/bin/borgmatic --config /etc/borgmatic/borgmatic.d/{{ service_name }}.yaml --verbosity -2 --syslog-verbosity 1
+ExecStart=systemd-inhibit --who="borgmatic" --what="sleep:shutdown" --why="Prevent interrupting scheduled backup" /usr/bin/borgmatic --config /etc/borgmatic/borgmatic.d/{{ inventory_hostname }}-{{ service_name }}.yaml --verbosity -2 --syslog-verbosity 1
