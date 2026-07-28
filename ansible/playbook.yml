@@ -1,4 +1,10 @@
 ---
+- name: Install packages
+  hosts: desktop1
+  become: true
+  roles:
+    - packages
+
 - name: Install containers
   hosts: desktop1
   become: true

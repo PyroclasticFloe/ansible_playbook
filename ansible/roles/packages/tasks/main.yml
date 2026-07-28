@@ -1,0 +1,8 @@
+---
+- name: Include CLI package list
+  ansible.builtin.include_vars: cli.yml
+
+- name: Install CLI tools
+  ansible.builtin.dnf:
+    name: "{{ cli_packages }}"
+    state: present

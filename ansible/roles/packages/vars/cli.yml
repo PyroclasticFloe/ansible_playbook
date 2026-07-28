@@ -1,0 +1,18 @@
+---
+cli_packages:
+  - tailscale
+  - borg
+  - borgmatic
+  - micro
+  - uv
+  - btop
+  - duf
+  - dust
+  - ripgrep
+  - rsync
+  - rclone
+  - git-lfs
+  - tealdeer
+  - chezmoi
+  - ansible
+  - python3-ansible-lint
