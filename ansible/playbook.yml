@@ -1,12 +1,12 @@
 ---
 - name: Install packages
-  hosts: desktop1
+  hosts: containers
   become: true
   roles:
     - packages
 
 - name: Install containers
-  hosts: desktop1
+  hosts: containers
   become: true
 
   tasks:

@@ -1,0 +1,5 @@
+---
+enabled_services:
+  - llama-swap
+is_nvidia: true
+ansible_python_interpreter: /usr/bin/python3
