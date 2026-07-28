@@ -102,6 +102,3 @@
     state: present
   when: is_nvidia | default(false)
 
-- name: Add Nvidia Container Toolkit COPR repository
-  ansible.builtin.copy:
-    dest: /etc
