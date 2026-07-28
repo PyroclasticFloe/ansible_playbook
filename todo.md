@@ -1,5 +1,5 @@
 # Todo
-- The backups are failing to run. We need to fix them. Do this **first**.
+- The backups are failing to run. We need to fix them. Do this **first**. **Done**
 - make sure that all variables are hooked up into the playbook
 and that they do what they are supposed to. I've noticed that the
 vaultwarden pod was getting started on desktop. It should be present, 

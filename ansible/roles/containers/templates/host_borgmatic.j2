@@ -1,0 +1,24 @@
+source_directories:
+    - /etc/ssh
+    - /home/aria/.ssh
+    - /etc/borgmatic/borgmatic.d
+
+repositories:
+    - path: ssh://{{ rsync_net_login }}/./{{ inventory_hostname }}_host
+      label: {{ inventory_hostname }}-host
+
+encryption_passphrase: ""
+remote_path: "{{ borg_remote_path | default('borg14') }}"
+
+ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+
+compression: auto,zstd
+
+keep_daily: 7
+keep_weekly: 4
+keep_monthly: 6
+
+checks:
+    - name: repository
+    - name: archives
+      frequency: 2 weeks

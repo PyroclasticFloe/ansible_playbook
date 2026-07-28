@@ -51,7 +51,16 @@
     needs_backup: "{{ svc.needs_backup | default(true) if svc is mapping else true }}"
   notify: Reload systemd
 
-- name: Create borgmatic host backup config
+- name: Create borgmatic host backup YAML config
+  ansible.builtin.template:
+    src: host_borgmatic.j2
+    dest: "/etc/borgmatic/borgmatic.d/{{ inventory_hostname }}-host.yaml"
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Reload systemd
+
+- name: Create borgmatic host backup systemd service
   ansible.builtin.template:
     src: backup_host_service.j2
     dest: "/etc/systemd/system/borgmatic-{{ inventory_hostname }}-host.service"
