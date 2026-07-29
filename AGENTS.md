@@ -20,6 +20,8 @@ When starting to make changes, create a feature branch and only work within that
 
 Comments should be used only when the purpose of the code is unclear.
 
+When accessing files in the containers repo, the cwd is containers so use paths relative to that i.e. ./ansible to access containers/ansible.
+
 Use GIT_CONFIG_NOSYSTEM=1 when needed. You may need to add commit.gpgsign=false
 
 Please read playbook_overview.md, todo.md, and borg-backup-cheatsheet.md in the same directory as AGENTS.md. Update both as the code base changes.

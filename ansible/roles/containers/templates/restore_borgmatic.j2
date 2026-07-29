@@ -7,6 +7,8 @@ remote_path: "{{ borg_remote_path | default('borg14') }}"
 
 ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
 
+prefix: "{{ restore_prefix | default('') }}"
+
 keep_within: 2d
 keep_daily: 14
 keep_weekly: 8
