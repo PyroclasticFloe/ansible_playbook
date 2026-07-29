@@ -27,7 +27,6 @@
         backup_frequency: "{{ service.backup_frequency | default('1 day') if service is mapping else '1 day' }}"
         restore_from_repo: "{{ service.restore_from_repo | default('') if service is mapping else '' }}"
         restore_from_label: "{{ service.restore_from_label | default('') if service is mapping else '' }}"
-        restore_prefix: "{{ service.restore_prefix | default('') if service is mapping else '' }}"
       loop: "{{ enabled_services }}"
       loop_control:
         loop_var: service

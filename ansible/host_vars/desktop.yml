@@ -8,6 +8,5 @@ enabled_services:
     restore_time: "04:00"
     restore_from_repo: "ssh://de5097@de5097.rsync.net/./vaultwarden"
     restore_from_label: "desktop-vaultwarden"
-    restore_prefix: "prodesk-"
 is_gui: true
 ansible_python_interpreter: /usr/bin/python3
