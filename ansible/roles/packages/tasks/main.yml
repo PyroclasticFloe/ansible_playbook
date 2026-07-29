@@ -102,3 +102,29 @@
     state: present
   when: is_nvidia | default(false)
 
+- name: Deploy nvidia-device-init systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/nvidia-device-init.service
+    content: |
+      [Unit]
+      Description=Ensure NVIDIA device nodes exist before GPU containers start
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/bin/nvidia-smi -pl 200
+      RemainAfterExit=yes
+
+      [Install]
+      WantedBy=multi-user.target
+    owner: root
+    group: root
+    mode: "0644"
+  when: is_nvidia | default(false)
+
+- name: Enable and start nvidia-device-init
+  ansible.builtin.systemd:
+    name: nvidia-device-init
+    enabled: true
+    state: started
+  when: is_nvidia | default(false)
+
