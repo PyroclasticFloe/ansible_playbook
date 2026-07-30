@@ -1,8 +1,20 @@
 ---
-- name: Upgrade all dnf packages
+- name: Check if first-run upgrade has already run
+  ansible.builtin.stat:
+    path: /root/.ansible_first_run_complete
+  register: first_run_marker
+
+- name: Upgrade all dnf packages (first run only)
   ansible.builtin.dnf:
     name: "*"
     state: latest
+  when: not first_run_marker.stat.exists
+
+- name: Mark first run as complete
+  ansible.builtin.file:
+    path: /root/.ansible_first_run_complete
+    state: touch
+  when: not first_run_marker.stat.exists
 
 - name: Include CLI package list
   ansible.builtin.include_vars: cli.yml

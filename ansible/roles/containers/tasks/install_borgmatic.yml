@@ -167,6 +167,7 @@
     needs_restore: "{{ svc.needs_restore | default(false) if svc is mapping else false }}"
     restore_from_repo: "{{ svc.restore_from_repo | default('') if svc is mapping else '' }}"
     restore_from_label: "{{ svc.restore_from_label | default('') if svc is mapping else '' }}"
+    restore_from_host: "{{ svc.restore_from_host | default('') if svc is mapping else '' }}"
   notify: Reload systemd
 
 - name: Create restore systemd service for services needing restore
