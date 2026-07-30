@@ -5,7 +5,7 @@ repositories:
 encryption_passphrase: "{{ vault_backup_passphrases[restore_from_label] | default('') }}"
 remote_path: "{{ borg_remote_path | default('borg14') }}"
 
-ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new
 
 match_archives: "sh:{{ restore_from_host }}-*"
 

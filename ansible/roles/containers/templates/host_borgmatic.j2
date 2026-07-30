@@ -10,7 +10,7 @@ repositories:
 encryption_passphrase: "{{ vault_backup_passphrases[inventory_hostname ~ '-host'] | default('') }}"
 remote_path: "{{ borg_remote_path | default('borg14') }}"
 
-ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o StrictHostKeyChecking=accept-new
+ssh_command: ssh -i /root/.ssh/{{ inventory_hostname }}_rsync_net_ecdsa -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new
 
 compression: auto,zstd
 
