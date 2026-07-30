@@ -16,3 +16,4 @@ cli_packages:
   - chezmoi
   - ansible
   - python3-ansible-lint
+  - policycoreutils-python-utils

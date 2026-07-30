@@ -29,6 +29,18 @@
 - name: Install runtime data
   ansible.builtin.include_tasks: install_var.yml
 
+- name: Set persistent SELinux file context for container volumes
+  ansible.builtin.command:
+    cmd: "semanage fcontext -a -t container_file_t '{{ var_dir }}(/.*)?'"
+  register: semanage_result
+  failed_when: false
+  changed_when: false
+
+- name: Apply SELinux context to var directory
+  ansible.builtin.command:
+    cmd: "restorecon -R {{ var_dir }}"
+  changed_when: false
+
 - name: Install quadlets
   ansible.builtin.include_tasks: install_quadlets.yml
 
