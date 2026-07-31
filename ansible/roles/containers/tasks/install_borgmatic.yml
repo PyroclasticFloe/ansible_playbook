@@ -141,7 +141,7 @@
   loop: >
     {{
       ['borgmatic-' + inventory_hostname + '-host.timer'] +
-      (borgmatic_service_names
+      (borgmatic_service_names | default([])
        | map('regex_replace', '^', 'borgmatic-' + inventory_hostname + '-')
        | map('regex_replace', '$', '.timer')
        | list
