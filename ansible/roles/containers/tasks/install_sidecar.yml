@@ -1,6 +1,6 @@
 ---
 - name: Check for Tailscale serve configuration
-  ansible.builtin.stat:
+  ansible.builtin.localstat:
     path: "{{ service_dir }}/etc/tailscale/serve.json"
   register: tailscale_serve
 
