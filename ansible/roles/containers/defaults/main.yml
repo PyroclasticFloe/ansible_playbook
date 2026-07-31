@@ -14,6 +14,11 @@ tailscale_env_file: "{{ tailscale_dir }}/env"
 tailscale_auth_key_file: "{{ playbook_dir }}/../../tailscale.env"
 tailscale_auth_key: "{{ lookup('ansible.builtin.file', tailscale_auth_key_file) }}"
 
+# Tailnet node name for the sidecar. Defaults to the service name; override
+# per-host (e.g. docker-socket-proxy -> desktop-docker-proxy) so a service
+# that runs on multiple hosts gets a unique *.ts.net name on each.
+tailscale_hostname: "{{ service_name }}"
+
 pod_enabled: true
 
 needs_backup: true

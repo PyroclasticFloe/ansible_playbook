@@ -75,6 +75,10 @@ playbook.yml
 │   │
 │   └── (SSH key, directory setup, etc.)
 │
+└── Enable podman.socket      ← host-level Docker-compatible API socket
+                                   (/run/podman/podman.sock), used by the
+                                   docker-socket-proxy service
+│
 └── For each service in enabled_services:
     └── main.yml (role entry point)
         ├── Load service defaults.yml
@@ -120,6 +124,7 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 | `restore_time` | `"04:00"` | `OnCalendar` time for the restore timer |
 | `backup_frequency` | `"1 day"` | (Reserved for future per-service timer offset) |
 | `pod_enabled` | `true` | Whether a pod quadlet wraps the service container |
+| `tailscale_hostname` | `service_name` | Tailnet node name for the sidecar (`TS_HOSTNAME`). Override per-host so a service deployed on several hosts (e.g. `docker-socket-proxy` → `desktop-docker-proxy`) gets a unique `*.ts.net` name on each. |
 
 Set in `group_vars/all/vars`:
 
@@ -127,12 +132,33 @@ Set in `group_vars/all/vars`:
 |---|---|
 | `backup_time` | Anchor time (HH:MM) for all backup timers |
 | `rsync_net_login` | rsync.net SSH login (e.g. `de5097@de5097.rsync.net`) |
+| `tailnet_domain` | Tailscale MagicDNS domain (e.g. `tail044fe.ts.net`), used to build cross-host names |
 
 Set in `group_vars/all/vault.yml` (ansible-vault encrypted):
 
 | Variable | Description |
 |---|---|
 | `vault_backup_passphrases` | Dict keyed by `<host>-<service_name>` mapping to each backup repo's encryption passphrase |
+
+## How Homarr sees containers across hosts
+
+Homarr's Docker integration is limited to Unix sockets mounted into its own
+container, so remote hosts can't be reached that way. Instead:
+
+- Each host that runs services deploys the `docker-socket-proxy` service — a
+  [Tecnativa socket proxy](https://github.com/Tecnativa/docker-socket-proxy)
+  container that exposes the host's `/run/podman/podman.sock` (read-only:
+  `CONTAINERS=1`, `POST=0`) on TCP `2375` inside its pod.
+- The service's Tailscale sidecar forwards that port onto the tailnet via raw
+  TCP in `serve.json`, so each host's proxy is reachable at
+  `<host>-docker-proxy.<tailnet_domain>:2375` (e.g. `server-docker-proxy.tail044fe.ts.net`).
+  Give each proxy a unique `tailscale_hostname` per host to keep tailnet names distinct.
+- Homarr (on its own host) connects to the proxies over the tailnet via
+  `DOCKER_HOSTNAMES` + `DOCKER_PORTS` in `homarr.env`, rendered from the
+  `homarr_docker_hostnames` / `homarr_docker_ports` host vars.
+
+`podman.socket` must be enabled on each host for the socket path to exist; the
+playbook does this at the start of the containers play.
 
 ## How to add a new service
 

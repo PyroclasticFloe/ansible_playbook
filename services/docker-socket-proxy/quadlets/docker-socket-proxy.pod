@@ -1,0 +1,10 @@
+[Unit]
+Description=Docker Socket Proxy Pod
+
+[Pod]
+PodName=docker-socket-proxy
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target

@@ -1,1 +1,4 @@
 tailscale: true
+
+runtime_directories:
+  - appdata
