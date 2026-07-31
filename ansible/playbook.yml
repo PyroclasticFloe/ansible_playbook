@@ -10,6 +10,11 @@
   become: true
 
   tasks:
+    - name: Check for containers policy.json
+      ansible.builtin.stat:
+        path: /etc/containers/policy.json
+      register: policy_json
+
     - name: Ensure containers policy.json exists
       ansible.builtin.copy:
         dest: /etc/containers/policy.json
@@ -33,6 +38,7 @@
               }
             }
           }
+      when: not policy_json.stat.exists
 
     - name: Enable Podman API socket (Docker-compatible /run/podman/podman.sock)
       ansible.builtin.systemd:
