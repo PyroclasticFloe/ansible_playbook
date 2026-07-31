@@ -1,7 +1,8 @@
 ---
 - name: Check for Tailscale serve configuration
-  ansible.builtin.localstat:
+  ansible.builtin.stat:
     path: "{{ service_dir }}/etc/tailscale/serve.json"
+  delegate_to: localhost
   register: tailscale_serve
 
 - name: Fail if Tailscale serve.json is missing
