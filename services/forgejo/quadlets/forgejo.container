@@ -6,7 +6,7 @@ Wants=network-online.target
 [Container]
 Pod=forgejo.pod
 
-Image=codeberg.org/forgejo/forgejo:13
+Image=codeberg.org/forgejo/forgejo:16
 
 Volume=/var/lib/local_containers/forgejo/data/:/data:Z
 Volume=/etc/timezone:/etc/timezone:ro,z
