@@ -79,6 +79,10 @@ playbook.yml
                                    (/run/podman/podman.sock), used by the
                                    docker-socket-proxy service
 │
+└── Ensure /etc/containers/policy.json   ← required by podman before it
+                                   will pull any image; write the default
+                                   (insecureAcceptAnything) if missing
+│
 └── For each service in enabled_services:
     └── main.yml (role entry point)
         ├── Load service defaults.yml

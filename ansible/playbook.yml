@@ -10,6 +10,30 @@
   become: true
 
   tasks:
+    - name: Ensure containers policy.json exists
+      ansible.builtin.copy:
+        dest: /etc/containers/policy.json
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          {
+            "default": [
+              {
+                "type": "insecureAcceptAnything"
+              }
+            ],
+            "transports": {
+              "docker-daemon": {
+                "": [
+                  {
+                    "type": "insecureAcceptAnything"
+                  }
+                ]
+              }
+            }
+          }
+
     - name: Enable Podman API socket (Docker-compatible /run/podman/podman.sock)
       ansible.builtin.systemd:
         name: podman.socket
