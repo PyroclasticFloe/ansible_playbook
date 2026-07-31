@@ -1,0 +1,31 @@
+[Unit]
+Description=Podman socket proxy
+After=network-online.target podman.socket
+Wants=network-online.target podman.socket
+
+[Container]
+Pod=docker-socket-proxy.pod
+
+Image=ghcr.io/tecnativa/docker-socket-proxy:latest
+
+Volume=/run/podman/podman.sock:/var/run/docker.sock:ro
+
+# Read-only API surface for Homarr: list containers + logs, no mutations.
+# To let Homarr start/stop/restart containers, set POST=1 (security tradeoff).
+Environment=CONTAINERS=1
+Environment=LOGS=1
+Environment=INFO=1
+Environment=EVENTS=1
+Environment=POST=0
+
+# Homarr's docs recommend disabling label separation for containers that
+# access the API socket instead of relabeling the host socket with :z.
+SecurityLabelDisable=true
+
+AutoUpdate=registry
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

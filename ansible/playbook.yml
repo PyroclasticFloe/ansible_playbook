@@ -10,6 +10,12 @@
   become: true
 
   tasks:
+    - name: Enable Podman API socket (Docker-compatible /run/podman/podman.sock)
+      ansible.builtin.systemd:
+        name: podman.socket
+        state: started
+        enabled: true
+
     - name: Install borgmatic backup system
       ansible.builtin.include_role:
         name: containers
@@ -20,6 +26,7 @@
         name: containers
       vars:
         service_name: "{{ service.name if service is mapping else service }}"
+        tailscale_hostname: "{{ (service.tailscale_hostname | default(service_name)) if service is mapping else service_name }}"
         needs_backup: "{{ service.needs_backup | default(true) if service is mapping else true }}"
         start_service: "{{ service.start_service | default(true) if service is mapping else true }}"
         needs_restore: "{{ service.needs_restore | default(false) if service is mapping else false }}"

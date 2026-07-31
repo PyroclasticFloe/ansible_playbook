@@ -6,12 +6,12 @@ Wants=network-online.target
 [Container]
 Pod=homarr.pod
 
-Image= ghcr.io/homarr-labs/homarr:latest
+Image=ghcr.io/homarr-labs/homarr:latest
 
-# I think podman can provide a docker socket.
-Volume=/var/run/docker.sock:/var/run/docker.sock:ro,z
 Volume=/var/lib/local_containers/homarr/appdata:/appdata:Z
 
+# Docker integration reaches the per-host socket proxies over the tailnet
+# (DOCKER_HOSTNAMES/DOCKER_PORTS in homarr.env), so no local socket is mounted.
 EnvironmentFile=/etc/local_containers/homarr/homarr.env
 
 AutoUpdate=registry
