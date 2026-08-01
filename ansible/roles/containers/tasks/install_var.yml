@@ -23,12 +23,7 @@
     src: "{{ service_var_src }}/"
     dest: "{{ var_dir }}/"
     mode: push
-    rsync_opts:
-      - -a
-      - --chown=root:root
-      {% for exclude in var_excludes %}
-      - --exclude={{ exclude }}
-      {% endfor %}
+    rsync_opts: "{{ ['-a', '--chown=root:root'] + var_excludes | map('regex_replace', '(.*)', '--exclude=\\1') | list }}
   when: runtime_copy | default(true)
 
 - name: Fix var directory ownership
