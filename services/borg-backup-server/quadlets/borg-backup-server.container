@@ -6,7 +6,7 @@ Wants=network-online.target
 [Container]
 Pod=borg-backup-server.pod
 
-Image=marcpope/borgbackupserver:latest
+Image=docker.io/marcpope/borgbackupserver:latest
 
 Volume=/var/lib/local_containers/borg-backup-server/:/var/bbs:Z
 
