@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:11</dateadded>
+  <title>Information Society</title>
+  <runtime>5</runtime>
+  <musicbrainzartistid>051439e5-478e-4c03-8bea-774ad0c28c12</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Information Society/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Information Society/backdrop.jpg</fanart>
+  </art>
+</artist>

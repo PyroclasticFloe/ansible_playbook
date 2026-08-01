@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-18 23:28:45</dateadded>
+  <title>Eddy Grant</title>
+  <runtime>4</runtime>
+  <musicbrainzartistid>0cf0583a-fcfd-4f07-b573-95273ec4bdb5</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Eddy Grant/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Eddy Grant/backdrop.jpg</fanart>
+  </art>
+</artist>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:34</dateadded>
+  <title>The Highwaymen</title>
+  <runtime>3</runtime>
+  <genre>Country</genre>
+  <musicbrainzartistid>c685765c-b778-4ed6-9035-8f7088431765</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/The Highwaymen/folder.jpg</poster>
+    <fanart>/config/metadata/artists/The Highwaymen/backdrop.jpg</fanart>
+  </art>
+</artist>

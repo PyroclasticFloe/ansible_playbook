@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:02</dateadded>
+  <title>Carl Douglas</title>
+  <runtime>3</runtime>
+  <musicbrainzartistid>2100ca6c-5a1d-463e-b50b-7e649debc454</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Carl Douglas/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Carl Douglas/backdrop.jpg</fanart>
+  </art>
+</artist>

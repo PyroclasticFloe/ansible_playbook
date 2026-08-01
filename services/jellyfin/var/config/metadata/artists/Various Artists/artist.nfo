@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:37</dateadded>
+  <title>Various Artists</title>
+  <runtime>6</runtime>
+  <musicbrainzartistid>89ad4ac3-39f7-470e-963a-56509c546377</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Various Artists/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Various Artists/backdrop.jpg</fanart>
+  </art>
+</artist>

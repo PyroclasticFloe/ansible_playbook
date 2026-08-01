@@ -21,4 +21,9 @@ restore nightly but should not be started. I've disabled the timer but let's mak
 - after first homarr run, verify it can resolve `<host>-docker-proxy.<tailnet_domain>`
   from inside its pod (MagicDNS). If not, substitute the proxies' tailnet IPs
   in `homarr_docker_hostnames`.
+- desktop now runs jellyfin (normal service, backs up to `desktop-jellyfin`) and
+  a restore-only forgejo (from `prodesk-forgejo`, started manually). After first
+  backup, confirm both repos init cleanly. Forgejo restore is run by hand
+  (`borgmatic-desktop-forgejo-restore.service`) — the timer stays enabled.
+
     

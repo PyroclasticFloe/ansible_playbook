@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:39:58</dateadded>
+  <title>Andrews Sisters</title>
+  <runtime>5</runtime>
+  <musicbrainzartistid>f5f22a9c-a00c-49f9-8123-329b632da79c</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Andrews Sisters/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Andrews Sisters/backdrop.jpg</fanart>
+  </art>
+</artist>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:00</dateadded>
+  <title>BABYMETAL</title>
+  <runtime>13</runtime>
+  <musicbrainzartistid>27e2997f-f7a1-4353-bcc4-57b9274fa9a4</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/BABYMETAL/folder.jpg</poster>
+    <fanart>/config/metadata/artists/BABYMETAL/backdrop.jpg</fanart>
+  </art>
+</artist>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:40:24</dateadded>
+  <title>Semisonic</title>
+  <runtime>4</runtime>
+  <musicbrainzartistid>3037bd18-0079-4e4b-9ce1-758689e210d8</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/Semisonic/folder.jpg</poster>
+    <fanart>/config/metadata/artists/Semisonic/backdrop.jpg</fanart>
+  </art>
+</artist>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<artist>
+  <biography />
+  <outline />
+  <lockdata>false</lockdata>
+  <dateadded>2025-05-13 17:39:33</dateadded>
+  <title>a-ha</title>
+  <runtime>4</runtime>
+  <genre>Synthpop</genre>
+  <musicbrainzartistid>7364dea6-ca9a-48e3-be01-b44ad0d19897</musicbrainzartistid>
+  <art>
+    <poster>/config/metadata/artists/a-ha/folder.jpg</poster>
+    <fanart>/config/metadata/artists/a-ha/backdrop.jpg</fanart>
+  </art>
+</artist>

@@ -1,6 +1,15 @@
 enabled_services:
   - searxng
   - homepage
+  - jellyfin
+  - name: forgejo
+    needs_backup: false
+    start_service: false
+    needs_restore: true
+    restore_time: "04:00"
+    restore_from_repo: "ssh://de5097@de5097.rsync.net/./prodesk-forgejo"
+    restore_from_label: "prodesk-forgejo"
+    restore_from_host: prodesk
   - name: vaultwarden
     needs_backup: false
     start_service: false

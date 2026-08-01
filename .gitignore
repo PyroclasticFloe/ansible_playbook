@@ -3,6 +3,9 @@
 .ansible/
 services/*/var/**
 !services/*/var/.keep
+# Jellyfin ships seed data in var (cache + config) that must be installed
+# with the service, so track it explicitly.
+!services/jellyfin/var/**
 
 ansible/host_vars/*.retry
 *.retry
