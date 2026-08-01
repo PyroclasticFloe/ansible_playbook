@@ -26,6 +26,9 @@
     rsync_opts:
       - -a
       - --chown=root:root
+      {% for exclude in var_excludes %}
+      - --exclude={{ exclude }}
+      {% endfor %}
   when: runtime_copy | default(true)
 
 - name: Fix var directory ownership

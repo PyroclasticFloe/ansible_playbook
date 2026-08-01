@@ -26,3 +26,8 @@ start_service: true
 needs_restore: false
 restore_time: "04:00"
 backup_frequency: "1 day"
+
+# Paths relative to the var directory to exclude from seeding.
+# Useful for symlinks pointing outside the source tree or large
+# directories that should be pre-existing on the host instead.
+var_excludes: []

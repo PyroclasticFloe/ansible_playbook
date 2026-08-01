@@ -2,3 +2,6 @@ tailscale: true
 
 runtime_directories:
   - config/logs
+
+var_excludes:
+  - images
