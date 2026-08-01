@@ -19,13 +19,13 @@
     loop_var: runtime_dir
 
 - name: Seed runtime directory
-  ansible.builtin.copy:
+  ansible.builtin.synchronize:
     src: "{{ service_var_src }}/"
     dest: "{{ var_dir }}/"
-    owner: root
-    group: root
-    mode: preserve
-    force: false
+    mode: push
+    rsync_opts:
+      - -a
+      - --chown=root:root
   when: runtime_copy | default(true)
 
 - name: Fix var directory ownership
