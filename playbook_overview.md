@@ -126,6 +126,9 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 | `start_service` | `true` | Whether the systemd units are started (`true`) or stopped (`false`) |
 | `needs_restore` | `false` | Whether restore (borg extract) timer is created for this service |
 | `restore_time` | `"04:00"` | `OnCalendar` time for the restore timer |
+| `restore_from_repo` | — | SSH URL of the remote borg repo to restore from (e.g. `ssh://de5097@de5097.rsync.net/./prodesk-forgejo`) |
+| `restore_from_label` | — | Label (key into `vault_backup_passphrases`) identifying the source repo's encryption passphrase |
+| `restore_from_host` | — | Hostname of the source host (used to match archive prefix `sh:<host>-*`) |
 | `backup_frequency` | `"1 day"` | (Reserved for future per-service timer offset) |
 | `pod_enabled` | `true` | Whether a pod quadlet wraps the service container |
 | `tailscale_hostname` | `service_name` | Tailnet node name for the sidecar (`TS_HOSTNAME`). Override per-host so a service deployed on several hosts (e.g. `docker-socket-proxy` → `desktop-docker-proxy`) gets a unique `*.ts.net` name on each. |
@@ -143,6 +146,7 @@ Set in `group_vars/all/vault.yml` (ansible-vault encrypted):
 | Variable | Description |
 |---|---|
 | `vault_backup_passphrases` | Dict keyed by `<host>-<service_name>` mapping to each backup repo's encryption passphrase |
+| `vault_homarr_secret_encryption_key` | 64-char hex key required for homarr to start; must be set in `ansible/group_vars/all/vault.yml` |
 
 ## How Homarr sees containers across hosts
 
@@ -176,7 +180,9 @@ playbook does this at the start of the containers play.
    - As a plain string if all defaults apply: `- <name>`
    - As a dict with overrides if any differ from defaults: `- name: <name> needs_backup: false start_service: false …`
 3. If the service needs **backup**: ensure `needs_backup` is `true` (default), and add the encryption passphrase to `group_vars/all/vault.yml` under `vault_backup_passphrases[<host>-<name>]`
-4. If the service needs **restore** (reader mode): set `needs_restore: true` and supply `restore_from_repo` + `restore_from_label` in the host vars dict. The vault key lookup uses `restore_from_label` as the index into `vault_backup_passphrases`.
+4. If the service needs **restore** (reader mode): set `needs_restore: true` and supply `restore_from_repo` + `restore_from_label` + `restore_from_host` in the host vars dict. The vault key lookup uses `restore_from_label` as the index into `vault_backup_passphrases`.
+
+> **Note:** Services that seed runtime data via `var/` (e.g. jellyfin) may need `chown -R 1000:1000 <var_dir>` after the first `install_var.yml` run, since seed data is copied as root. This should be automated in the playbook in a future update.
 
 ## How to add a new host
 
