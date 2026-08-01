@@ -13,7 +13,7 @@ Volume=/var/lib/local_containers/homepage/images:/app/public/images:ro,Z
 Environment=HOMEPAGE_ALLOWED_HOSTS=homepage.tail044fe.ts.net
 Environment=LOG_TARGETS=stdout
 
-Exec=sh -c "export HOSTNAME=0.0.0.0; exec node server.js" #GitHub discussion (#5106)
+Exec=sh -c "export HOSTNAME=0.0.0.0; exec node server.js"
 
 AutoUpdate=registry
 
