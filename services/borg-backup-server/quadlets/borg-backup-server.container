@@ -8,10 +8,10 @@ Pod=borg-backup-server.pod
 
 Image=marcpope/borgbackupserver:latest
 
-Volume=/var/lib/local_containers/borg-backup-server/backups/bbs
+Volume=/var/lib/local_containers/borg-backup-server/backups/bbs:/var/bbs:Z
 
-Environment=SSH_PORT=${SSH_PORT:-2222}
-Environment=https://borg-backup-server.tail044fe.ts.net
+Environment=SSH_PORT=2222
+Environment=APP_URL=https://borg-backup-server.tail044fe.ts.net
 
 AutoUpdate=registry
 
