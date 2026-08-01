@@ -1,7 +1,7 @@
 enabled_services:
   - searxng
-  - homepage
   - jellyfin
+  - borg-backup-server
   - name: forgejo
     needs_backup: false
     start_service: false
