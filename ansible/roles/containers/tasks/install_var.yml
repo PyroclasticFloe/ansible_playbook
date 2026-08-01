@@ -27,3 +27,12 @@
     mode: preserve
     force: false
   when: runtime_copy | default(true)
+
+- name: Fix var directory ownership
+  ansible.builtin.file:
+    path: "{{ var_dir }}"
+    state: directory
+    owner: "{{ var_owner }}"
+    group: "{{ var_group | default(var_owner) }}"
+    recurse: true
+  when: var_owner is defined
