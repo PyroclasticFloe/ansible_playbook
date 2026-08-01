@@ -1,0 +1,10 @@
+[Unit]
+Description=Borg Backup Server Pod
+
+[Pod]
+PodName=borg-backup-server
+
+Network=bridge
+
+[Install]
+WantedBy=multi-user.target
