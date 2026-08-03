@@ -4,3 +4,4 @@ gui_packages:
   - gwenview
   - code
   - krdc
+  - featherpad
