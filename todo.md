@@ -18,6 +18,8 @@
 - Revert jellyfin var un-gitignore in `.gitignore`. **Done**
 
 ## Pending
+- All services are getting a valkey directory in /var/lib/local_containers. It's only needed for searxng and shouldn't be added to others by the playbook
+- services that are present but not active should be disabled, not enabled. Forgejo and Vaultwarden both start on desktop after a reboot.
 - Add prodesk to inventory with `docker-socket-proxy` (`tailscale_hostname: prodesk-docker-proxy`), then append `prodesk-docker-proxy.<tailnet_domain>` to `homarr_docker_hostnames` in `ansible/host_vars/desktop.yml`.
 - Add `vault_homarr_secret_encryption_key` to `ansible/group_vars/all/vault.yml` (64-char hex; `openssl rand -hex 32`). Homarr will exit until it's set.
 - Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault.
