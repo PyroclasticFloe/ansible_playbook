@@ -8,8 +8,7 @@ Pod=borg-backup-server.pod
 
 Image=docker.io/marcpope/borgbackupserver:latest
 
-Volume=/var/lib/local_containers/borg-backup-server/:/var/bbs:Z
-Volume=/mnt/backup:/mnt/backup:Z
+Volume=/mnt/backup/bbs:/var/bbs:Z
 
 Environment=SSH_PORT=22
 Environment=APP_URL=https://borg-backup-server.tail044fe.ts.net
