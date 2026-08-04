@@ -13,7 +13,7 @@ Volume=/mnt/backup:/mnt/backup:Z
 
 Environment=SSH_PORT=22
 Environment=APP_URL=https://borg-backup-server.tail044fe.ts.net
-Environment=ADMIN_PASS=#S!%*RvSAtvva7@7RbpUaSMWMXQgD9Cf
+Environment=ADMIN_PASS=
 
 AutoUpdate=registry
 
