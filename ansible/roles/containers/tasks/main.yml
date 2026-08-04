@@ -3,6 +3,14 @@
   ansible.builtin.include_vars:
     file: "{{ service_dir }}/defaults.yml"
 
+# include_vars loads into play scope and persists across service iterations,
+# so a runtime_directories set by one service (e.g. valkey in searxng) would
+# otherwise leak into every later service. Snapshot it then clear.
+- name: Capture runtime directories for this service
+  ansible.builtin.set_fact:
+    service_runtime_directories: "{{ runtime_directories | default([]) }}"
+    runtime_directories: []
+
 - name: Compute systemd units for this service
   ansible.builtin.set_fact:
     systemd_units: >-

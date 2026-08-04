@@ -14,7 +14,7 @@
     owner: "{{ runtime_dir.get('owner', 'root') if runtime_dir is mapping else 'root' }}"
     group: "{{ runtime_dir.get('group', 'root') if runtime_dir is mapping else 'root' }}"
     mode: "0755"
-  loop: "{{ runtime_directories | default([]) }}"
+  loop: "{{ service_runtime_directories }}"
   loop_control:
     loop_var: runtime_dir
 

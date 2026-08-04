@@ -104,7 +104,7 @@ playbook.yml
 | `main.yml` | Per-service entry point. Loads service defaults, computes systemd unit names, then includes the sub-tasks below in sequence. |
 | `install_service.yml` | Creates `<etc_dir>` and copies files from `services/<name>/etc/` into it. Notifies `Restart service` handler on change. |
 | `install_secrets.yml` | If `services/<name>/env.j2` exists, renders it to `<etc_dir>/<name>.env` (mode 0600). Notifies `Restart service` on change. |
-| `install_var.yml` | Creates `<var_dir>` and any extra `runtime_directories` listed in the service's defaults.yml. Seeds data from `services/<name>/var/` (won't overwrite existing files). |
+| `install_var.yml` | Creates `<var_dir>` and any extra `runtime_directories` listed in the service's defaults.yml. Seeds data from `services/<name>/var/` (won't overwrite existing files). `runtime_directories` is captured per-service into `service_runtime_directories` in `main.yml` so a value from one service (e.g. searxng's `valkey`) doesn't leak into others via `include_vars` play-scope persistence. |
 | `install_quadlets.yml` | Copies `services/<name>/quadlets/` to `/etc/containers/systemd/<name>/`. Notifies `Restart service` on change. |
 | `install_sidecar.yml` | Creates Tailscale state dir, config dir, renders `tailscale.container` and `tailscale.env` templates. Runs only when `tailscale: true`. Validates that `serve.json` and auth key exist. |
 | `systemd.yml` | Runs `systemctl daemon-reload`, then enables each systemd unit and sets it to `started` or `stopped` based on `start_service`. |

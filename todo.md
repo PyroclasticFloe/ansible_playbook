@@ -18,8 +18,8 @@
 - Revert jellyfin var un-gitignore in `.gitignore`. **Done**
 - Add `vault_homarr_secret_encryption_key` to `ansible/group_vars/all/vault.yml` (64-char hex; `openssl rand -hex 32`). Homarr will exit until it's set. **Done**
 - Verify homarr resolves `<host>-docker-proxy.<tailnet_domain>` from inside its pod (MagicDNS). If not, substitute proxies' tailnet IPs in `homarr_docker_hostnames`. **Done**
+- Stop all services from getting a valkey directory in /var/lib/local_containers (only searxng needs it). Fix: snapshot `runtime_directories` per-service so it no longer leaks across service loops. **Done**
 ## Pending
-- All services are getting a valkey directory in /var/lib/local_containers. It's only needed for searxng and shouldn't be added to others by the playbook
 - When the playbook runs, files in the /var/lib/local_containers/borg-backup-server/tmp are being chown'ed to 1000:1000. This should not happen! They need to stay as 33:33 or I can't log in.
 - services that are present but not active should be disabled, not enabled. Forgejo and Vaultwarden both start on desktop after a reboot.
 - in common/tailscale/*, the files are empty. Do we need them? If not, let's get rid of them.
