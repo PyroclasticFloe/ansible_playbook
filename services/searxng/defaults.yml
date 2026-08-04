@@ -1,9 +1,13 @@
 tailscale: true
 
-# valkey/valkey:9-alpine runs as a fixed non-root user (uid 999, gid 1000).
-# The bind-mounted host directory must be owned to match, or valkey can't
-# write its RDB snapshot.
+# valkey/valkey:9-alpine runs as a fixed non-root user (uid 999, gid 1000),
+# and searxng/searxng runs as uid 977 (searxng:searxng).
+# The bind-mounted host directories must be owned to match, or the container
+# can't write (valkey's RDB snapshot / searxng's cache).
 runtime_directories:
   - path: valkey
     owner: 999
     group: 1000
+  - path: cache
+    owner: 977
+    group: 977

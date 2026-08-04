@@ -7,6 +7,17 @@
     group: root
     mode: "0755"
 
+- name: Seed runtime directory
+  ansible.builtin.synchronize:
+    src: "{{ service_var_src }}/"
+    dest: "{{ var_dir }}/"
+    mode: push
+    rsync_opts: "{{ ['-a', '--chown=root:root'] + var_excludes | map('regex_replace', '(.*)', '--exclude=\\1') | list }}"
+  when: runtime_copy | default(true)
+
+# Created after seeding because the seed step (--chown=root:root) would otherwise
+# overwrite the non-root ownership these runtime dirs need (e.g. valkey uid 999,
+# searxng uid 977) for the container to write to its bind mount.
 - name: Create additional runtime directories
   ansible.builtin.file:
     path: "{{ var_dir }}/{{ runtime_dir.path if runtime_dir is mapping else runtime_dir }}"
@@ -17,14 +28,6 @@
   loop: "{{ service_runtime_directories }}"
   loop_control:
     loop_var: runtime_dir
-
-- name: Seed runtime directory
-  ansible.builtin.synchronize:
-    src: "{{ service_var_src }}/"
-    dest: "{{ var_dir }}/"
-    mode: push
-    rsync_opts: "{{ ['-a', '--chown=root:root'] + var_excludes | map('regex_replace', '(.*)', '--exclude=\\1') | list }}"
-  when: runtime_copy | default(true)
 
 - name: Fix var directory ownership
   ansible.builtin.file:
