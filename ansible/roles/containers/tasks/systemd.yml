@@ -6,7 +6,7 @@
 - name: Enable and start systemd units
   ansible.builtin.systemd:
     name: "{{ unit }}"
-    enabled: true
+    enabled: "{{ start_service }}"
     state: "{{ 'started' if start_service else 'stopped' }}"
   loop: "{{ systemd_units }}"
   loop_control:
