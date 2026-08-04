@@ -22,6 +22,7 @@
 - The borg-backup-server `tmp/` chown issue is moot: BBS no longer places data in `/var/lib/local_containers`, and it's now `needs_backup: false`. **Done**
 - services that are present but not active should be disabled, not enabled. Forgejo and Vaultwarden both start on desktop after a reboot. Fix: `systemd.yml` now sets `enabled: "{{ start_service }}"` so inactive services are disabled. **Done**
 - Remove empty, unreferenced `common/tailscale/` (sidecar.container, sidecar.env) — install_sidecar.yml uses role templates instead. **Done**
+- Wire BBS `ADMIN_PASS` from vault (`bbs_pass`) via an `env.j2` secrets file + `EnvironmentFile=` (was hardcoded empty in the quadlet). **Done**
 ## Pending
 - Add prodesk to inventory with `docker-socket-proxy` (`tailscale_hostname: prodesk-docker-proxy`), then append `prodesk-docker-proxy.<tailnet_domain>` to `homarr_docker_hostnames` in `ansible/host_vars/desktop.yml`.
 - Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault. **Delay. The backup system is changing**

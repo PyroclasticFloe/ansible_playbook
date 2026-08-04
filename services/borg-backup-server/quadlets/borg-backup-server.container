@@ -12,7 +12,7 @@ Volume=/mnt/backup/bbs:/var/bbs:Z
 
 Environment=SSH_PORT=22
 Environment=APP_URL=https://borg-backup-server.tail044fe.ts.net
-Environment=ADMIN_PASS=
+EnvironmentFile=/etc/local_containers/borg-backup-server/borg-backup-server.env
 
 AutoUpdate=registry
 
