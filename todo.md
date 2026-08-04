@@ -21,8 +21,8 @@
 - Stop all services from getting a valkey directory in /var/lib/local_containers (only searxng needs it). Fix: snapshot `runtime_directories` per-service so it no longer leaks across service loops. **Done**
 - The borg-backup-server `tmp/` chown issue is moot: BBS no longer places data in `/var/lib/local_containers`, and it's now `needs_backup: false`. **Done**
 - services that are present but not active should be disabled, not enabled. Forgejo and Vaultwarden both start on desktop after a reboot. Fix: `systemd.yml` now sets `enabled: "{{ start_service }}"` so inactive services are disabled. **Done**
+- Remove empty, unreferenced `common/tailscale/` (sidecar.container, sidecar.env) — install_sidecar.yml uses role templates instead. **Done**
 ## Pending
-- in common/tailscale/*, the files are empty. Do we need them? If not, let's get rid of them.
 - Add prodesk to inventory with `docker-socket-proxy` (`tailscale_hostname: prodesk-docker-proxy`), then append `prodesk-docker-proxy.<tailnet_domain>` to `homarr_docker_hostnames` in `ansible/host_vars/desktop.yml`.
 - Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault. **Delay. The backup system is changing**
 - Add post-install `chown -R 1000:1000 /var/lib/local_containers/jellyfin/` task to playbook (jellyfin seed data copied as root by `install_var.yml`).
