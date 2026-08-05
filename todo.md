@@ -25,6 +25,7 @@
 - Wire BBS `ADMIN_PASS` from vault (`bbs_pass`) via an `env.j2` secrets file + `EnvironmentFile=` (was hardcoded empty in the quadlet). **Done**
 - Fix searxng volume permissions surfacing after a while: seed step (`--chown=root:root`) was clobbering runtime-dir ownership, giving `root:root` dirs that valkey (uid 999) and searxng (uid 977) can't write (valkey MISCONF RDB, cache ownership warning). Move runtime-dir creation *after* seeding in `install_var.yml` and add `cache` (977) to searxng `runtime_directories`. **Done**
 - Add prodesk to inventory with `docker-socket-proxy` (`tailscale_hostname: prodesk-docker-proxy`), append `prodesk-docker-proxy.<tailnet_domain>` to `homarr_docker_hostnames` in `ansible/host_vars/desktop.yml`, and gate borgmatic setup behind new `backup_enabled` host var (`false` on prodesk for now). **Done**
+- Run vaultwarden and forgejo as non-root: the official images don't drop privileges (vaultwarden `start.sh` just execs the binary as root). Add `User=1000:1000` to both quadlets; data dirs must be owned `1000:1000`. **Done**
 ## Pending
 - Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault. **Delay. The backup system is changing**
 - Add post-install `chown -R 1000:1000 /var/lib/local_containers/jellyfin/` task to playbook (jellyfin seed data copied as root by `install_var.yml`).

@@ -8,6 +8,8 @@ Pod=vaultwarden.pod
 
 Image=docker.io/vaultwarden/server:latest
 
+User=1000:1000
+
 Volume=/var/lib/local_containers/vaultwarden/data/:/data:Z
 
 Environment=DOMAIN=https://vaultwarden.tail044fe.ts.net/
