@@ -1,1 +1,7 @@
 tailscale: true
+
+# The forgejo container's git process runs as uid/gid 1000 (set via
+# USER_UID/USER_GID), so the whole var dir must be owned 1000:1000 or it
+# can't write its data (e.g. /data/git/.ssh/authorized_keys).
+var_owner: "1000"
+var_group: "1000"
