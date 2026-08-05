@@ -10,6 +10,9 @@ Image=docker.io/vaultwarden/server:latest
 
 User=1000:1000
 
+# Vaultwarden binds port 80 in the pod; allow the non-root uid to bind it.
+Sysctl=net.ipv4.ip_unprivileged_port_start=0
+
 Volume=/var/lib/local_containers/vaultwarden/data/:/data:Z
 
 Environment=DOMAIN=https://vaultwarden.tail044fe.ts.net/
