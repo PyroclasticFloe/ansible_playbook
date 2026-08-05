@@ -58,7 +58,7 @@ Each container runs under podman via quadlet files (systemd units). Services can
 
 ```
 playbook.yml
-├── install_borgmatic.yml     ← runs once per host (not per-service)
+├── install_borgmatic.yml     ← runs once per host (not per-service); skipped when backup_enabled=false
 │   ├── Install borgmatic & borg packages
 │   ├── Copy SSH automation key to /root/.ssh/
 │   ├── For each service with needs_backup=true:
@@ -140,6 +140,9 @@ Set in `group_vars/all/vars`:
 | `backup_time` | Anchor time (HH:MM) for all backup timers |
 | `rsync_net_login` | rsync.net SSH login (e.g. `de5097@de5097.rsync.net`) |
 | `tailnet_domain` | Tailscale MagicDNS domain (e.g. `tail044fe.ts.net`), used to build cross-host names |
+| `backup_enabled` | Whether this host runs borgmatic backups (default `true`). Set `false` per-host to skip all backup setup — used for prodesk until it's a stable backup writer |
+| `is_gui` | Whether this host gets GUI packages (default `false`) |
+| `is_nvidia` | Whether this host has an Nvidia GPU (default `false`) |
 
 Set in `group_vars/all/vault.yml` (ansible-vault encrypted):
 
@@ -189,6 +192,6 @@ playbook does this at the start of the containers play.
 1. Create `host_vars/<host>.yml` with `enabled_services` listing each service
 2. Add the host to `inventory` with its connection details
 3. Generate an SSH automation key on the new host (`ssh-keygen -t ed25519 -f ~/.ssh/<host>_rsync_net_ecdsa -N ""`) and append its public key to the rsync.net `authorized_keys`
-4. If the host runs backup writers, add each `<host>-<service>` passphrase to `vault.yml`
+4. If the host runs backup writers, add each `<host>-<service>` passphrase to `vault.yml`; leave `backup_enabled: false` in the host vars until then
 5. Add any host-specific overrides to `host_vars/<host>.yml`
 6. Run `ansible-playbook -i ansible/inventory ansible/playbook.yml --ask-vault-pass`

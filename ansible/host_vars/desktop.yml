@@ -26,8 +26,7 @@ enabled_services:
     needs_backup: false
 
 # Socket proxies Homarr's Docker integration connects to (tailnet TCP).
-# Add prodesk-docker-proxy.{{ tailnet_domain }} once prodesk is provisioned.
-homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }}"
-homarr_docker_ports: "2375,2375"
+homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"
+homarr_docker_ports: "2375,2375,2375"
 is_gui: true
 ansible_python_interpreter: /usr/bin/python3

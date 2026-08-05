@@ -50,6 +50,7 @@
       ansible.builtin.include_role:
         name: containers
         tasks_from: install_borgmatic.yml
+      when: backup_enabled | default(true)
 
     - name: Install each container service
       ansible.builtin.include_role:

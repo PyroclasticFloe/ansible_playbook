@@ -6,3 +6,8 @@ enabled_services:
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
     needs_backup: false
+
+# No backups yet; enable once the SSH automation key is registered on rsync.net
+# and prodesk is a stable backup writer.
+backup_enabled: false
+ansible_python_interpreter: /usr/bin/python3

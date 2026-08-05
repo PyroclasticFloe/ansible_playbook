@@ -2,3 +2,4 @@
 desktop ansible_connection=local ansible_host=127.0.0.1
 server ansible_host=server.tail044fe.ts.net
 laptop ansible_host=laptop.tail044fe.ts.net
+prodesk ansible_host=prodesk.tail044fe.ts.net
