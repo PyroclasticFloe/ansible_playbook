@@ -11,7 +11,6 @@ Image=codeberg.org/forgejo/forgejo:16
 User=1000:1000
 
 Volume=/var/lib/local_containers/forgejo/data/:/data:Z
-Volume=/etc/timezone:/etc/timezone:ro,z
 Volume=/etc/localtime:/etc/localtime:ro,z
 
 Environment=USER_UID=1000
