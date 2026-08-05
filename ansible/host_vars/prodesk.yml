@@ -1,0 +1,8 @@
+enabled_services:
+  - name: vaultwarden
+    needs_backup: false
+  - name: forgejo
+    needs_backup: false
+  - name: docker-socket-proxy
+    tailscale_hostname: prodesk-docker-proxy
+    needs_backup: false
