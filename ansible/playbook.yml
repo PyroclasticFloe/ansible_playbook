@@ -65,6 +65,9 @@
         backup_frequency: "{{ service.backup_frequency | default('1 day') if service is mapping else '1 day' }}"
         restore_from_repo: "{{ service.restore_from_repo | default('') if service is mapping else '' }}"
         restore_from_label: "{{ service.restore_from_label | default('') if service is mapping else '' }}"
+        bbs_backup: "{{ service.bbs_backup | default(false) if service is mapping else false }}"
+        bbs_stop_time: "{{ service.bbs_stop_time | default('01:00') if service is mapping else '01:00' }}"
+        bbs_start_time: "{{ service.bbs_start_time | default('01:15') if service is mapping else '01:15' }}"
       loop: "{{ enabled_services }}"
       loop_control:
         loop_var: service

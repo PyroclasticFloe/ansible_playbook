@@ -30,6 +30,7 @@
 - Forgejo failing to start with `Error: statfs /etc/timezone: no such file or directory`. Fedora has no `/etc/timezone` (Debian-only file). Remove the `/etc/timezone:/etc/timezone:ro,z` bind mount from `forgejo.container`; keep the `/etc/localtime` mount. **Done**
 - Forgejo exiting 111 with `s6-svscan: fatal: unable to open .s6-svscan/lock: Permission denied` after adding `User=1000:1000`. The forgejo image's s6-overlay init (PID 1) must run as root; it drops to uid/gid 1000 for the forgejo process via `USER_UID`/`USER_GID`. Remove `User=1000:1000` from `forgejo.container`. **Done**
 - Forgejo install page failing to write `/data/git/.ssh/authorized_keys` (permission denied): the forgejo container's git process is uid 1000, but the seeded var dir was root:root. Set `var_owner`/`var_group: "1000"` in `services/forgejo/defaults.yml`. **Done**
+- Add BBS (Borg Backup Server) stop/start bracketing units. BBS schedules backups from the desktop controller but can't stop/start service containers, so each BBS-backed service gets `bbs-<host>-<svc>-stop.{service,timer}` and `-start.{service,timer}` units bracketing the backup window. Gated per-service by `bbs_backup`; times from `bbs_stop_time`/`bbs_start_time`. **Done**
 ## Pending
 - Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault. **Delay. The backup system is changing**
 - Add post-install `chown -R 1000:1000 /var/lib/local_containers/jellyfin/` task to playbook (jellyfin seed data copied as root by `install_var.yml`).

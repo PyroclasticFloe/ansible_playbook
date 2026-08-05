@@ -1,0 +1,48 @@
+---
+- name: Create BBS backup stop service
+  ansible.builtin.template:
+    src: bbs_stop_service.j2
+    dest: "/etc/systemd/system/bbs-{{ inventory_hostname }}-{{ service_name }}-stop.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Create BBS backup stop timer
+  ansible.builtin.template:
+    src: bbs_stop_timer.j2
+    dest: "/etc/systemd/system/bbs-{{ inventory_hostname }}-{{ service_name }}-stop.timer"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Create BBS backup start service
+  ansible.builtin.template:
+    src: bbs_start_service.j2
+    dest: "/etc/systemd/system/bbs-{{ inventory_hostname }}-{{ service_name }}-start.service"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Create BBS backup start timer
+  ansible.builtin.template:
+    src: bbs_start_timer.j2
+    dest: "/etc/systemd/system/bbs-{{ inventory_hostname }}-{{ service_name }}-start.timer"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload systemd
+
+- name: Enable and start BBS backup stop/start timers
+  ansible.builtin.systemd:
+    name: "bbs-{{ inventory_hostname }}-{{ service_name }}-{{ item }}.timer"
+    enabled: true
+    state: started
+  loop:
+    - stop
+    - start
+  loop_control:
+    loop_var: item
+  notify: Reload systemd

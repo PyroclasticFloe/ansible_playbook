@@ -3,7 +3,7 @@ enabled_services:
     needs_backup: false
     bbs_backup: true
     bbs_stop_time: "01:00"
-    bbs_start_time: "01:15"
+    bbs_start_time: "01:30"
   - name: forgejo
     needs_backup: false
   - name: docker-socket-proxy

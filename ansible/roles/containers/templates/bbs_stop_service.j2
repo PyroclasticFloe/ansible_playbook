@@ -1,0 +1,6 @@
+[Unit]
+Description=Stop {{ service_name }} for BBS backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl stop {{ service_name }}.service

@@ -1,0 +1,6 @@
+[Unit]
+Description=Start {{ service_name }} after BBS backup
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl start {{ service_name }}.service

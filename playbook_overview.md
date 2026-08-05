@@ -17,6 +17,7 @@ ansible/
     ├── tasks/
     │   ├── main.yml             # Per-service orchestration
     │   ├── install_borgmatic.yml # Borgmatic setup (runs once per host)
+    │   ├── install_bbs.yml      # BBS stop/start bracketing units (per-service)
     │   ├── install_service.yml  # Deploys static config files
     │   ├── install_secrets.yml  # Renders env.j2 secrets template
     │   ├── install_var.yml      # Creates runtime directories + seeds data
@@ -94,6 +95,9 @@ playbook.yml
         ├── install_sidecar.yml     → Tailscale container (if tailscale=true)
         ├── flush_handlers          → restart service if config/secrets changed
         └── systemd.yml             → enable/start (or stop) systemd units
+    └── if bbs_backup=true: install_bbs.yml → BBS stop/start .service/.timer
+        pairs bracketing the backup window (stop at bbs_stop_time,
+        start at bbs_start_time); enables and starts the timers
 ```
 
 ## Task file details
@@ -108,6 +112,7 @@ playbook.yml
 | `install_quadlets.yml` | Copies `services/<name>/quadlets/` to `/etc/containers/systemd/<name>/`. Notifies `Restart service` on change. |
 | `install_sidecar.yml` | Creates Tailscale state dir, config dir, renders `tailscale.container` and `tailscale.env` templates. Runs only when `tailscale: true`. Validates that `serve.json` and auth key exist. |
 | `systemd.yml` | Runs `systemctl daemon-reload`, then enables each systemd unit and sets it to `started` or `stopped` based on `start_service`. |
+| `install_bbs.yml` | When `bbs_backup` is true, renders `bbs-<host>-<service>-stop.{service,timer}` and `-start.{service,timer}` unit pairs (BBS can't stop/start services itself, so these bracket the backup window) and enables/starts the two timers. |
 
 ## Handlers
 
@@ -130,6 +135,9 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 | `restore_from_label` | — | Label (key into `vault_backup_passphrases`) identifying the source repo's encryption passphrase |
 | `restore_from_host` | — | Hostname of the source host (used to match archive prefix `sh:<host>-*`) |
 | `backup_frequency` | `"1 day"` | (Reserved for future per-service timer offset) |
+| `bbs_backup` | `false` | Whether this service is backed up by BBS (Borg Backup Server). When true, BBS stop/start bracketing units are created (`bbs-<host>-<service>-stop/start.*`), since BBS schedules the backup from the controller but can't stop/start the service itself. |
+| `bbs_stop_time` | `"01:00"` | `OnCalendar` time for the BBS stop timer; the service must be stopped before the BBS-scheduled backup runs. |
+| `bbs_start_time` | `"01:15"` | `OnCalendar` time for the BBS start timer; restarts the service after the backup window. Keep the window wide enough for the backup to finish, or the service restarts mid-backup. |
 | `pod_enabled` | `true` | Whether a pod quadlet wraps the service container |
 | `tailscale_hostname` | `service_name` | Tailnet node name for the sidecar (`TS_HOSTNAME`). Override per-host so a service deployed on several hosts (e.g. `docker-socket-proxy` → `desktop-docker-proxy`) gets a unique `*.ts.net` name on each. |
 

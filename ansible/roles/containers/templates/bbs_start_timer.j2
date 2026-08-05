@@ -1,0 +1,8 @@
+[Unit]
+Description=Start {{ service_name }} after BBS backup
+
+[Timer]
+OnCalendar=*-*-* {{ bbs_start_time }}
+
+[Install]
+WantedBy=timers.target
