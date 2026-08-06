@@ -6,6 +6,9 @@ enabled_services:
     bbs_start_time: "01:30"
   - name: forgejo
     needs_backup: false
+    bbs_backup: true
+    bbs_stop_time: "02:00"
+    bbs_start_time: "02:30"
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
     needs_backup: false
