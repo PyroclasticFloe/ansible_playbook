@@ -6,7 +6,7 @@ Pod=homepage.pod
 
 Image=ghcr.io/gethomepage/homepage:latest
 
-Volume=/etc/local_containers/homepage:/app/config:ro,Z
+Volume=/etc/local_containers/homepage/config:/app/config:ro,Z
 Volume=/var/lib/local_containers/homepage/config/logs:/app/config/logs:Z
 Volume=/var/lib/local_containers/homepage/images:/app/public/images:ro,Z
 
