@@ -2,18 +2,16 @@ enabled_services:
   - name: vaultwarden
     needs_backup: false
     bbs_backup: true
-    bbs_use_agent_scripts: true
-    # bbs_stop_time: "01:00"
-    # bbs_start_time: "01:30"
   - name: forgejo
     needs_backup: false
     bbs_backup: true
-    bbs_use_agent_scripts: true
-    # bbs_stop_time: "02:00"
-    # bbs_start_time: "02:30"
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
     needs_backup: false
+
+# Agent scripts parse BBS_BACKUP_PLAN to stop/start the service being backed
+# up, so the per-service systemd timer bracketing units are skipped.
+bbs_use_agent_scripts: true
 
 # No backups yet; enable once the SSH automation key is registered on rsync.net
 # and prodesk is a stable backup writer.

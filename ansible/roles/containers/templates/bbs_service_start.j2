@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 set -euo pipefail
-/usr/bin/systemctl start {{ service_name }}.service
+service="${BBS_BACKUP_PLAN##*-}"
+/usr/bin/systemctl start "${service}.service"

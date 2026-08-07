@@ -4,7 +4,6 @@ enabled_services:
   - name: jellyfin
     needs_backup: false
     bbs_backup: true
-    bbs_use_agent_scripts: true
     # bbs_stop_time: "23:00"
     # bbs_start_time: "23:30"
   - name: borg-backup-server
@@ -37,4 +36,8 @@ enabled_services:
 homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"
 homarr_docker_ports: "2375,2375,2375"
 is_gui: true
+
+# Agent scripts parse BBS_BACKUP_PLAN to stop/start the service being backed
+# up, so the per-service systemd timer bracketing units are skipped.
+bbs_use_agent_scripts: true
 ansible_python_interpreter: /usr/bin/python3

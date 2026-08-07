@@ -1,5 +1,5 @@
 ---
-- name: Create BBS backup stop script directory
+- name: Create BBS backup script directory
   ansible.builtin.file:
     path: /usr/local/lib/bbs
     state: directory
@@ -10,7 +10,7 @@
 - name: Install BBS backup stop script
   ansible.builtin.template:
     src: bbs_service_stop.j2
-    dest: "/usr/local/lib/bbs/bbs-{{ service_name }}-stop.sh"
+    dest: /usr/local/lib/bbs/bbs-stop.sh
     owner: root
     group: root
     mode: "0755"
@@ -18,7 +18,7 @@
 - name: Install BBS backup start script
   ansible.builtin.template:
     src: bbs_service_start.j2
-    dest: "/usr/local/lib/bbs/bbs-{{ service_name }}-start.sh"
+    dest: /usr/local/lib/bbs/bbs-start.sh
     owner: root
     group: root
     mode: "0755"
