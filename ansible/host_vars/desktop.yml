@@ -27,8 +27,6 @@ enabled_services:
   - name: docker-socket-proxy
     tailscale_hostname: desktop-docker-proxy
     needs_backup: false
-  - name: homarr
-    needs_backup: false
   - name: homepage
     needs_backup: false
 
