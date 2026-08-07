@@ -33,9 +33,13 @@
 - Add BBS (Borg Backup Server) stop/start bracketing units. BBS schedules backups from the desktop controller but can't stop/start service containers, so each BBS-backed service gets `bbs-<host>-<svc>-stop.{service,timer}` and `-start.{service,timer}` units bracketing the backup window. Gated per-service by `bbs_backup`; times from `bbs_stop_time`/`bbs_start_time`. **Done**
 - Replace BBS timer bracketing with agent pre/post-backup scripts. BBS agents can run shell scripts (via a plugin) around each backup, so the fixed stop/start timer window is no longer needed (avoids editing the playbook to change times, and avoids a mid-backup restart if the backup overruns the window). The shell-hook plugin config is **per-client** (attached to any of that client's backup plans), so only one generic script pair is installed per host (`/usr/local/lib/bbs/bbs-stop.sh` + `bbs-start.sh`). The scripts parse `BBS_BACKUP_PLAN` (last `-` token) to stop/start only the service being backed up. Host-level `bbs_use_agent_scripts` (default `false`) switches a host to the scripts; when true, the old `install_bbs.yml` timer units are skipped (files/templates kept for rollback). Enabled on prodesk and desktop; point each client's shell-hook plugin at the two script paths. **Done**
 ## Pending
-- Flip homarr `needs_backup` to `true` after stability confirmed; add `desktop-homarr` passphrase to vault. **Delay. The backup system is changing**
-- Add post-install `chown -R 1000:1000 /var/lib/local_containers/jellyfin/` task to playbook (jellyfin seed data copied as root by `install_var.yml`).
+- which containers can be run as 1000:1000? Which ones are already running as a non-root user? Which ones have to run as root? Let's create a list of those. I would prefer as many containers as can run without root to do so.
+- Add post-install `chown -R 1000:1000 /var/lib/local_containers/jellyfin/` task to playbook (jellyfin seed data copied as root by `install_var.yml`). Homepage will need this, as well as any other container running as 1000:1000. Likewise for anything running as a different non-root user.
 - Containerize adguard home if possible.
   - Should run on prodesk, present but not active on desktop.
   - Router handles DHCP so no port exposure needed.
   - DNS over HTTPS/TLS in home network is a nice to have.
+- Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
+- Ideally, we should not be seeding data once the BBS is up. The var directory should only have .keep for each service, etc should only contain persistent settings and the tailscale/serve.json.
+- SearXNG has a secret key in its settings.yml. Let's set it up to read that from an env file in the same directory and make sure that's backed up. Or just remove it from git and rely on the backup.
+
