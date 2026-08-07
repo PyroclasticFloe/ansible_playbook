@@ -64,4 +64,8 @@
 
 - name: Install BBS backup stop/start units
   ansible.builtin.include_tasks: install_bbs.yml
-  when: bbs_backup | default(false)
+  when: bbs_backup | default(false) and not (bbs_use_agent_scripts | default(false))
+
+- name: Install BBS backup stop/start scripts
+  ansible.builtin.include_tasks: install_bbs_scripts.yml
+  when: bbs_backup | default(false) and (bbs_use_agent_scripts | default(false))

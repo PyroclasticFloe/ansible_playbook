@@ -2,6 +2,7 @@ enabled_services:
   - name: vaultwarden
     needs_backup: false
     bbs_backup: true
+    bbs_use_agent_scripts: true
     bbs_stop_time: "01:00"
     bbs_start_time: "01:30"
   - name: forgejo
