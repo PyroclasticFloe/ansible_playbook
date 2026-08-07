@@ -145,15 +145,3 @@
     state: started
   when: is_nvidia | default(false)
 
-- name: Disable systemd OSC 3008 context signalling (profile script)
-  ansible.builtin.file:
-    path: /etc/profile.d/80-systemd-osc-context.sh
-    state: absent
-
-- name: Disable systemd OSC 3008 context signalling (tmpfiles fragment)
-  ansible.builtin.file:
-    path: /etc/tmpfiles.d/20-systemd-osc-context.conf
-    src: /dev/null
-    state: link
-    force: true
-
