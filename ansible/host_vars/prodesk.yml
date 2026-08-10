@@ -8,6 +8,10 @@ enabled_services:
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
     needs_backup: false
+  - name: adguard-home
+    bbs_backup: true
+    needs_backup: false
+
 
 # Agent scripts parse BBS_BACKUP_PLAN to stop/start the service being backed
 # up, so the per-service systemd timer bracketing units are skipped.

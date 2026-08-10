@@ -1,0 +1,15 @@
+[Unit]
+Description=AdGuardHome
+
+[Container]
+Pod=adguard-home.pod
+
+Image=docker.io/adguard/adguardhome
+
+Volume=/var/lib/local_containers/adguard-home/work:/opt/adguardhome/work:Z
+Volume=/var/lib/local_containers/adguard-home/config:/opt/adguardhome/conf:Z
+
+AutoUpdate=registry
+
+[Service]
+Restart=always
