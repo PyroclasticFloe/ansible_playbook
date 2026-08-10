@@ -33,13 +33,14 @@
 - Add BBS (Borg Backup Server) stop/start bracketing units. BBS schedules backups from the desktop controller but can't stop/start service containers, so each BBS-backed service gets `bbs-<host>-<svc>-stop.{service,timer}` and `-start.{service,timer}` units bracketing the backup window. Gated per-service by `bbs_backup`; times from `bbs_stop_time`/`bbs_start_time`. **Done**
 - Replace BBS timer bracketing with agent pre/post-backup scripts. BBS agents can run shell scripts (via a plugin) around each backup, so the fixed stop/start timer window is no longer needed (avoids editing the playbook to change times, and avoids a mid-backup restart if the backup overruns the window). The shell-hook plugin config is **per-client** (attached to any of that client's backup plans), so only one generic script pair is installed per host (`/usr/local/lib/bbs/bbs-stop.sh` + `bbs-start.sh`). The scripts parse `BBS_BACKUP_PLAN` (last `-` token) to stop/start only the service being backed up. Host-level `bbs_use_agent_scripts` (default `false`) switches a host to the scripts; when true, the old `install_bbs.yml` timer units are skipped (files/templates kept for rollback). Enabled on prodesk and desktop; point each client's shell-hook plugin at the two script paths. **Done**
 - Fix var dir ownership for non-root containers. The "Fix var directory ownership" task in `install_var.yml` recursively chowns `<var_dir>` when `var_owner`/`var_group` are set in the service defaults. Set on jellyfin, forgejo, homepage, and vaultwarden (all run as 1000:1000). SearXNG is handled per-subdir via `runtime_directories` (valkey 999:1000, cache 977:977). BBS (uid 33) writes only to `/mnt/backup/bbs`, which is left unmanaged by the playbook. **Done**
+- Ideally, we should not be seeding data once the BBS is up. The var directory should only have .keep for each service, etc should only contain persistent settings and the tailscale/serve.json. **Done**
+- SearXNG has a secret key in its settings.yml. Let's set it up to read that from an env file in the same directory and make sure that's backed up. Or just remove it from git and rely on the backup. **File removed from git**
+- General cleanup. Look for any tasks, variables, files no longer used
 ## Pending
 - Containerize adguard home if possible.
   - Should run on prodesk, present but not active on desktop.
   - Router handles DHCP so no port exposure for dhcp needed.
   - DNS over HTTPS/TLS in home network is a nice to have.
 - Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
-- Ideally, we should not be seeding data once the BBS is up. The var directory should only have .keep for each service, etc should only contain persistent settings and the tailscale/serve.json.
-- SearXNG has a secret key in its settings.yml. Let's set it up to read that from an env file in the same directory and make sure that's backed up. Or just remove it from git and rely on the backup.
-- General cleanup. Look for any tasks, variables, files no longer used in the playbook and move them under the containers/old_tasks directory.
+ in the playbook and move them under the containers/old_tasks directory.
 
