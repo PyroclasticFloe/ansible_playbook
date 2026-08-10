@@ -1,1 +1,6 @@
 tailscale: true
+
+# Container runs as uid/gid 1000 (User= in quadlet); work/ and config/ must be
+# owned 1000:1000 after the root-owned seed step in install_var.yml.
+var_owner: 1000
+var_group: 1000

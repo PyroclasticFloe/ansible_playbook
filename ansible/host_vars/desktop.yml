@@ -29,6 +29,9 @@ enabled_services:
     needs_backup: false
   - name: homepage
     needs_backup: false
+  - name: adguard-home
+    needs_backup: false
+    start_service: false
 
 # Socket proxies Homarr's Docker integration connects to (tailnet TCP).
 homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"

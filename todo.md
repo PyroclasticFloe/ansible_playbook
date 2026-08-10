@@ -41,6 +41,7 @@
   - Should run on prodesk, present but not active on desktop.
   - Router handles DHCP so no port exposure for dhcp needed.
   - DNS over HTTPS/TLS in home network is a nice to have.
+  - Base container wired: runs as 1000:1000, `AddCapability=CAP_NET_RAW` (image already file-caps `cap_net_bind_service`), no host port binds (web UI proxied via tailscale serve → 127.0.0.1:3000), DoT/DoH and serving DNS to the LAN still pending.
 - Homepage can't ping services on the tailnet. Example:
 ```
 podman exec -it systemd-homepage sh
