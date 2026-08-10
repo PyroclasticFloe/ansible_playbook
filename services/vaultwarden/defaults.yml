@@ -1,1 +1,6 @@
 tailscale: true
+
+# Vaultwarden runs as uid/gid 1000 (User= in quadlet); the data mount must
+# be owned 1000:1000 after root seeding.
+var_owner: 1000
+var_group: 1000

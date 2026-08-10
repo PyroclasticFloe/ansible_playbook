@@ -1,5 +1,10 @@
 tailscale: true
 
+# Homepage runs as uid/gid 1000 (User= in quadlet); writable mount is
+# config/logs, so the var dir must be owned 1000:1000 after root seeding.
+var_owner: 1000
+var_group: 1000
+
 runtime_directories:
   - config/logs
 
