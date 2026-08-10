@@ -41,6 +41,17 @@
   - Should run on prodesk, present but not active on desktop.
   - Router handles DHCP so no port exposure for dhcp needed.
   - DNS over HTTPS/TLS in home network is a nice to have.
+- Homepage can't ping services on the tailnet. Example:
+```
+podman exec -it systemd-homepage sh
+/app $ ping https://llama-swap.tail044fe.ts.net/
+```
+  ping: socktype: SOCK_RAW
+  ping: socket: Operation not permitted
+  ping: => missing cap_net_raw+p capability or setuid?
+```
+  Possibly the same solution as adguard home?
+  
 - Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
  in the playbook and move them under the containers/old_tasks directory.
  - General cleanup. Look for any tasks, variables, files no longer used
