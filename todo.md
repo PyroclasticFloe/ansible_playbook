@@ -35,7 +35,7 @@
 - Fix var dir ownership for non-root containers. The "Fix var directory ownership" task in `install_var.yml` recursively chowns `<var_dir>` when `var_owner`/`var_group` are set in the service defaults. Set on jellyfin, forgejo, homepage, and vaultwarden (all run as 1000:1000). SearXNG is handled per-subdir via `runtime_directories` (valkey 999:1000, cache 977:977). BBS (uid 33) writes only to `/mnt/backup/bbs`, which is left unmanaged by the playbook. **Done**
 - Ideally, we should not be seeding data once the BBS is up. The var directory should only have .keep for each service, etc should only contain persistent settings and the tailscale/serve.json. **Done**
 - SearXNG has a secret key in its settings.yml. Let's set it up to read that from an env file in the same directory and make sure that's backed up. Or just remove it from git and rely on the backup. **File removed from git**
-- General cleanup. Look for any tasks, variables, files no longer used
+
 ## Pending
 - Containerize adguard home if possible.
   - Should run on prodesk, present but not active on desktop.
@@ -43,4 +43,5 @@
   - DNS over HTTPS/TLS in home network is a nice to have.
 - Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
  in the playbook and move them under the containers/old_tasks directory.
+ - General cleanup. Look for any tasks, variables, files no longer used
 
