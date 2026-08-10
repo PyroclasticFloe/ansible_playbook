@@ -154,6 +154,7 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 | `bbs_stop_time` | `"01:00"` | `OnCalendar` time for the BBS stop timer (only used when `bbs_use_agent_scripts` is false); the service must be stopped before the BBS-scheduled backup runs. |
 | `bbs_start_time` | `"01:15"` | `OnCalendar` time for the BBS start timer (only used when `bbs_use_agent_scripts` is false); restarts the service after the backup window. Keep the window wide enough for the backup to finish, or the service restarts mid-backup. |
 | `pod_enabled` | `true` | Whether a pod quadlet wraps the service container |
+| `var_owner` | — | Recursively chown `<var_dir>` to this uid after seeding (with `var_group`, defaulting to `var_owner`). Set when the container runs as a non-root user so it can write its bind mounts. |
 | `tailscale_hostname` | `service_name` | Tailnet node name for the sidecar (`TS_HOSTNAME`). Override per-host so a service deployed on several hosts (e.g. `docker-socket-proxy` → `desktop-docker-proxy`) gets a unique `*.ts.net` name on each. |
 
 Set in `group_vars/all/vars`:
@@ -208,7 +209,7 @@ playbook does this at the start of the containers play.
 3. If the service needs **backup**: ensure `needs_backup` is `true` (default), and add the encryption passphrase to `group_vars/all/vault.yml` under `vault_backup_passphrases[<host>-<name>]`
 4. If the service needs **restore** (reader mode): set `needs_restore: true` and supply `restore_from_repo` + `restore_from_label` + `restore_from_host` in the host vars dict. The vault key lookup uses `restore_from_label` as the index into `vault_backup_passphrases`.
 
-> **Note:** Services that seed runtime data via `var/` (e.g. jellyfin) may need `chown -R 1000:1000 <var_dir>` after the first `install_var.yml` run, since seed data is copied as root. This should be automated in the playbook in a future update.
+> **Note:** Seed data is copied as root, so any service whose container drops to a non-root user must set `var_owner`/`var_group` in its `defaults.yml` to match that user's uid/gid (e.g. `1000:1000` for jellyfin/homepage/vaultwarden/forgejo). The "Fix var directory ownership" task in `install_var.yml` then recursively chowns `<var_dir>` after seeding. For per-subdir ownership (e.g. searxng's valkey/cache), use `runtime_directories` entries with `owner`/`group` instead.
 
 ## How to add a new host
 
