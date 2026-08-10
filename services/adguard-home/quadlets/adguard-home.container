@@ -6,6 +6,14 @@ Pod=adguard-home.pod
 
 Image=docker.io/adguard/adguardhome
 
+User=1000:1000
+
+# The image file-caps the binary with cap_net_bind_service at build time
+# (setcap 'cap_net_bind_service=+eip'), so port 53/80 bind as uid 1000.
+# NET_RAW is not granted by the image; add it for raw sockets (ICMP ping
+# checks in the admin UI, and the optional DHCP server).
+AddCapability=CAP_NET_RAW
+
 Volume=/var/lib/local_containers/adguard-home/work:/opt/adguardhome/work:Z
 Volume=/var/lib/local_containers/adguard-home/config:/opt/adguardhome/conf:Z
 
