@@ -8,30 +8,20 @@ enabled_services:
     # bbs_start_time: "23:30"
   - name: borg-backup-server
     needs_backup: false
-  - name: forgejo
-    needs_backup: false
-    start_service: false
-    # needs_restore: true
-    # restore_time: "04:00"
-    # restore_from_repo: "ssh://de5097@de5097.rsync.net/./prodesk-forgejo"
-    # restore_from_label: "prodesk-forgejo"
-    # restore_from_host: prodesk
-  - name: vaultwarden
-    needs_backup: false
-    start_service: false
-    # needs_restore: true
-    # restore_time: "04:00"
-    # restore_from_repo: "ssh://de5097@de5097.rsync.net/./vaultwarden"
-    # restore_from_label: "prodesk-vaultwarden"
-    # restore_from_host: prodesk
   - name: docker-socket-proxy
     tailscale_hostname: desktop-docker-proxy
     needs_backup: false
   - name: homepage
     needs_backup: false
-  - name: adguard-home
-    needs_backup: false
-    start_service: false
+  # - name: forgejo
+  #   needs_backup: false
+  #   start_service: false
+  # - name: vaultwarden
+  #   needs_backup: false
+  #   start_service: false
+  #   - name: adguard-home
+  #   needs_backup: false
+  #   start_service: false
 
 # Socket proxies Homarr's Docker integration connects to (tailnet TCP).
 homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"
