@@ -52,7 +52,6 @@ podman exec -it systemd-homepage sh
   Added CAP_NET_RAW **Done**
 ## Pending
 
-- Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
- in the playbook and move them under the containers/old_tasks directory.
+- Clean up the previous (borgmatic) backup system. Moved `install_borgmatic.yml` and its 8 templates to `old_tasks/old_backup/`, removed the borgmatic `include_role` block and per-service borgmatic var-passing from `playbook.yml`, and dropped the borgmatic-only defaults/group vars (`needs_backup`, `needs_restore`, `restore_time`, `backup_frequency`, `backup_time`, `rsync_net_login`, `backup_enabled`). **Done**
 - General cleanup. Look for any tasks, variables, files no longer used
 - Look into DOH/DOT for home network DNS using AdGuardHome.

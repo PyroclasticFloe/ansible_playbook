@@ -7,8 +7,8 @@ ansible/
 ├── inventory                    # Host inventory
 ├── playbook.yml                 # Top-level playbook (entry point)
 ├── group_vars/all/
-│   ├── vars                     # Global vars (backup_time, rsync_net_login)
-│   └── vault.yml                # Encrypted backup passphrases
+│   ├── vars                     # Global vars (tailnet_domain, is_gui, …)
+│   └── vault.yml                # Encrypted secrets
 ├── host_vars/
 │   └── desktop.yml              # Per-host service list + overrides
 └── roles/containers/
@@ -16,7 +16,6 @@ ansible/
     ├── handlers/main.yml        # Handlers (Restart service, Reload systemd)
     ├── tasks/
     │   ├── main.yml             # Per-service orchestration
-    │   ├── install_borgmatic.yml # Borgmatic setup (runs once per host)
     │   ├── install_bbs.yml      # BBS stop/start bracketing units (per-service)
     │   ├── install_bbs_scripts.yml # BBS agent pre/post-backup scripts (per-service)
     │   ├── install_service.yml  # Deploys static config files
@@ -26,19 +25,12 @@ ansible/
     │   ├── install_sidecar.yml  # Tailscale sidecar container
     │   └── systemd.yml          # Enables/stops systemd units
         └── templates/               # Jinja2 templates
-            ├── backup_host_service.j2
-            ├── backup_container_service.j2
-            ├── backup_timer.j2
             ├── bbs_service_start.j2
             ├── bbs_service_stop.j2
             ├── bbs_start_service.j2
             ├── bbs_start_timer.j2
             ├── bbs_stop_service.j2
             ├── bbs_stop_timer.j2
-            ├── restore_borgmatic.j2
-            ├── restore_service.j2
-            ├── restore_timer.j2
-            ├── service_borgmatic.j2
             ├── tailscale.container.j2
             └── tailscale.env.j2
 ```
@@ -59,30 +51,11 @@ The playbook (`ansible/playbook.yml`) installs containerised services on a singl
 Each container runs under podman via quadlet files (systemd units). Services can optionally:
 
 - Use Tailscale as a sidecar for private networking
-- Be backed up to rsync.net via borgmatic
-- Be restored (read-only extract) from a remote borg repo
 
 ## Playbook flow
 
 ```
 playbook.yml
-├── install_borgmatic.yml     ← runs once per host (not per-service); skipped when backup_enabled=false
-│   ├── Install borgmatic & borg packages
-│   ├── Copy SSH automation key to /root/.ssh/
-│   ├── For each service with needs_backup=true:
-│   │   ├── Create borgmatic config (/etc/borgmatic/borgmatic.d/<host>-<service>.yaml)
-│   │   ├── Create systemd backup service
-│   │   └── Create systemd backup timer
-│   ├── Create host-level borgmatic service + timer (/etc/borgmatic/borgmatic.d/<host>-host.yaml)
-│   ├── Enable & start all backup timers
-│   ├── For each service with needs_restore=true:
-│   │   ├── Create restore borgmatic config (/etc/borgmatic/borgmatic.d/restore_<service>.yaml)
-│   │   ├── Create systemd restore service
-│   │   ├── Create systemd restore timer
-│   │   └── Enable & start restore timer
-│   │
-│   └── (SSH key, directory setup, etc.)
-│
 └── Enable podman.socket      ← host-level Docker-compatible API socket
                                    (/run/podman/podman.sock), used by the
                                    docker-socket-proxy service
@@ -113,11 +86,14 @@ playbook.yml
     service being backed up
 ```
 
+The old borgmatic backup system was retired and its files moved to
+`old_tasks/old_backup/` (see the git history there); backups now run via
+BBS (Borg Backup Server).
+
 ## Task file details
 
 | Task file | Purpose |
 |---|---|
-| `install_borgmatic.yml` | Installs borg/borgmatic, copies SSH key to root, creates per-service borgmatic configs + systemd timers, creates host-level backup, creates restore configs/timers, enables everything. Runs once per host (not per-service loop). |
 | `main.yml` | Per-service entry point. Loads service defaults, computes systemd unit names, then includes the sub-tasks below in sequence. |
 | `install_service.yml` | Creates `<etc_dir>` and copies files from `services/<name>/etc/` into it. Notifies `Restart service` handler on change. |
 | `install_secrets.yml` | If `services/<name>/env.j2` exists, renders it to `<etc_dir>/<name>.env` (mode 0600). Notifies `Restart service` on change. |
@@ -133,7 +109,7 @@ playbook.yml
 | Handler | Action |
 |---|---|
 | `Restart service` | Appends the current `systemd_units` list to the `changed_units` fact. Collected across all services; at the end of the playbook the accumulated list is restarted. |
-| `Reload systemd` | Runs `systemctl daemon-reload`. Used by borgmatic tasks that write new unit files. |
+| `Reload systemd` | Runs `systemctl daemon-reload`. Used by tasks that write new unit files. |
 
 ## Built-in variables
 
@@ -141,14 +117,7 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 
 | Variable | Default | Description |
 |---|---|---|
-| `needs_backup` | `true` | Whether borgmatic configs + backup timers are created for this service |
 | `start_service` | `true` | Whether the systemd units are started (`true`) or stopped (`false`) |
-| `needs_restore` | `false` | Whether restore (borg extract) timer is created for this service |
-| `restore_time` | `"04:00"` | `OnCalendar` time for the restore timer |
-| `restore_from_repo` | — | SSH URL of the remote borg repo to restore from (e.g. `ssh://de5097@de5097.rsync.net/./prodesk-forgejo`) |
-| `restore_from_label` | — | Label (key into `vault_backup_passphrases`) identifying the source repo's encryption passphrase |
-| `restore_from_host` | — | Hostname of the source host (used to match archive prefix `sh:<host>-*`) |
-| `backup_frequency` | `"1 day"` | (Reserved for future per-service timer offset) |
 | `bbs_backup` | `false` | Whether this service is backed up by BBS (Borg Backup Server). When true, the service is stopped/started around the BBS-scheduled backup — either via systemd stop/start timer units or agent pre/post-backup scripts, depending on `bbs_use_agent_scripts`. |
 | `bbs_use_agent_scripts` | `false` | **Host-level** (set in `host_vars/<host>.yml`, not per-service). When true, installs the BBS agent stop/start scripts and skips the systemd timer units. The shell-hook plugin config is per-client, so one generic script pair handles every backup plan on the host. Leave the timer units installed as a fallback until the agent scripts are proven. |
 | `bbs_stop_time` | `"01:00"` | `OnCalendar` time for the BBS stop timer (only used when `bbs_use_agent_scripts` is false); the service must be stopped before the BBS-scheduled backup runs. |
@@ -161,10 +130,7 @@ Set in `group_vars/all/vars`:
 
 | Variable | Description |
 |---|---|
-| `backup_time` | Anchor time (HH:MM) for all backup timers |
-| `rsync_net_login` | rsync.net SSH login (e.g. `de5097@de5097.rsync.net`) |
 | `tailnet_domain` | Tailscale MagicDNS domain (e.g. `tail044fe.ts.net`), used to build cross-host names |
-| `backup_enabled` | Whether this host runs borgmatic backups (default `true`). Set `false` per-host to skip all backup setup — used for prodesk until it's a stable backup writer |
 | `is_gui` | Whether this host gets GUI packages (default `false`) |
 | `is_nvidia` | Whether this host has an Nvidia GPU (default `false`) |
 
@@ -172,7 +138,6 @@ Set in `group_vars/all/vault.yml` (ansible-vault encrypted):
 
 | Variable | Description |
 |---|---|
-| `vault_backup_passphrases` | Dict keyed by `<host>-<service_name>` mapping to each backup repo's encryption passphrase |
 | `vault_homarr_secret_encryption_key` | 64-char hex key required for homarr to start; must be set in `ansible/group_vars/all/vault.yml` |
 
 ## How Homarr sees containers across hosts
@@ -205,9 +170,8 @@ playbook does this at the start of the containers play.
    - **`env.j2`** (optional) — Jinja2 template rendered to `<name>.env` with mode `0600`; reference vault variables here
 2. Add the service name to `enabled_services` in the host's `host_vars/<host>.yml`:
    - As a plain string if all defaults apply: `- <name>`
-   - As a dict with overrides if any differ from defaults: `- name: <name> needs_backup: false start_service: false …`
-3. If the service needs **backup**: ensure `needs_backup` is `true` (default), and add the encryption passphrase to `group_vars/all/vault.yml` under `vault_backup_passphrases[<host>-<name>]`
-4. If the service needs **restore** (reader mode): set `needs_restore: true` and supply `restore_from_repo` + `restore_from_label` + `restore_from_host` in the host vars dict. The vault key lookup uses `restore_from_label` as the index into `vault_backup_passphrases`.
+   - As a dict with overrides if any differ from defaults: `- name: <name> start_service: false …`
+3. If the service is backed up by BBS (Borg Backup Server), set `bbs_backup: true` in the host vars dict.
 
 > **Note:** Seed data is copied as root, so any service whose container drops to a non-root user must set `var_owner`/`var_group` in its `defaults.yml` to match that user's uid/gid (e.g. `1000:1000` for jellyfin/homepage/vaultwarden/forgejo). The "Fix var directory ownership" task in `install_var.yml` then recursively chowns `<var_dir>` after seeding. For per-subdir ownership (e.g. searxng's valkey/cache), use `runtime_directories` entries with `owner`/`group` instead.
 
@@ -215,7 +179,5 @@ playbook does this at the start of the containers play.
 
 1. Create `host_vars/<host>.yml` with `enabled_services` listing each service
 2. Add the host to `inventory` with its connection details
-3. Generate an SSH automation key on the new host (`ssh-keygen -t ed25519 -f ~/.ssh/<host>_rsync_net_ecdsa -N ""`) and append its public key to the rsync.net `authorized_keys`
-4. If the host runs backup writers, add each `<host>-<service>` passphrase to `vault.yml`; leave `backup_enabled: false` in the host vars until then
-5. Add any host-specific overrides to `host_vars/<host>.yml`
-6. Run `ansible-playbook -i ansible/inventory ansible/playbook.yml --ask-vault-pass`
+3. Add any host-specific overrides to `host_vars/<host>.yml`
+4. Run `ansible-playbook -i ansible/inventory ansible/playbook.yml --ask-vault-pass`

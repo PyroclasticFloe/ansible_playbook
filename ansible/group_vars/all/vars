@@ -1,23 +1,11 @@
 ---
 ansible_python_interpreter: /usr/bin/python3
 
-# Anchor time for the shared daily backup batch (see roles/containers/tasks
-# for how backup_frequency exceptions offset from this). 24h HH:MM.
-backup_time: "03:00"
-
-# de5097@de5097.rsync.net style login. Set per-environment; not secret by
-# itself, but pair it with the SSH key at /root/.ssh/<hostname>_rsync_net_ecdsa
-rsync_net_login: "de5097@de5097.rsync.net"
-
 # Whether this host gets GUI packages (steam, code, etc.)
 is_gui: false
 
 # Whether this host has an Nvidia GPU (installs akmod-nvidia)
 is_nvidia: false
-
-# Whether this host runs borgmatic backups. Set false to skip all backup
-# setup on a host (e.g. prodesk until it's a fully-provisioned backup writer).
-backup_enabled: true
 
 # Tailnet MagicDNS domain used for cross-host names (e.g. docker socket proxies)
 tailnet_domain: "tail044fe.ts.net"

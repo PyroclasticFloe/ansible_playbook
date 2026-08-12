@@ -46,25 +46,13 @@
         state: started
         enabled: true
 
-    - name: Install borgmatic backup system
-      ansible.builtin.include_role:
-        name: containers
-        tasks_from: install_borgmatic.yml
-      when: backup_enabled | default(true)
-
     - name: Install each container service
       ansible.builtin.include_role:
         name: containers
       vars:
         service_name: "{{ service.name if service is mapping else service }}"
         tailscale_hostname: "{{ (service.tailscale_hostname | default(service_name)) if service is mapping else service_name }}"
-        needs_backup: "{{ service.needs_backup | default(true) if service is mapping else true }}"
         start_service: "{{ service.start_service | default(true) if service is mapping else true }}"
-        needs_restore: "{{ service.needs_restore | default(false) if service is mapping else false }}"
-        restore_time: "{{ service.restore_time | default('04:00') if service is mapping else '04:00' }}"
-        backup_frequency: "{{ service.backup_frequency | default('1 day') if service is mapping else '1 day' }}"
-        restore_from_repo: "{{ service.restore_from_repo | default('') if service is mapping else '' }}"
-        restore_from_label: "{{ service.restore_from_label | default('') if service is mapping else '' }}"
         bbs_backup: "{{ service.bbs_backup | default(false) if service is mapping else false }}"
         bbs_stop_time: "{{ service.bbs_stop_time | default('01:00') if service is mapping else '01:00' }}"
         bbs_start_time: "{{ service.bbs_start_time | default('01:15') if service is mapping else '01:15' }}"
