@@ -53,5 +53,6 @@ podman exec -it systemd-homepage sh
 ## Pending
 
 - Clean up the previous (borgmatic) backup system. Moved `install_borgmatic.yml` and its 8 templates to `old_tasks/old_backup/`, removed the borgmatic `include_role` block and per-service borgmatic var-passing from `playbook.yml`, and dropped the borgmatic-only defaults/group vars (`needs_backup`, `needs_restore`, `restore_time`, `backup_frequency`, `backup_time`, `rsync_net_login`, `backup_enabled`). **Done**
+- Remove the now-dead BBS timer bracketing: `install_bbs.yml` and its stop/start timer templates plus `bbs_backup`/`bbs_stop_time`/`bbs_start_time` vars moved to `old_tasks/old_backup/bbs/` and deleted from the playbook, since all hosts use `bbs_use_agent_scripts`. **Done**
 - General cleanup. Look for any tasks, variables, files no longer used
 - Look into DOH/DOT for home network DNS using AdGuardHome.

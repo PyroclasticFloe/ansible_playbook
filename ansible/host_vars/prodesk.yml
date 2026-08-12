@@ -1,15 +1,12 @@
 enabled_services:
   - name: vaultwarden
     needs_backup: false
-    bbs_backup: true
   - name: forgejo
     needs_backup: false
-    bbs_backup: true
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
     needs_backup: false
   - name: adguard-home
-    bbs_backup: true
     needs_backup: false
 
 

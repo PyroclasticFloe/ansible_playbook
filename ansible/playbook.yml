@@ -53,9 +53,6 @@
         service_name: "{{ service.name if service is mapping else service }}"
         tailscale_hostname: "{{ (service.tailscale_hostname | default(service_name)) if service is mapping else service_name }}"
         start_service: "{{ service.start_service | default(true) if service is mapping else true }}"
-        bbs_backup: "{{ service.bbs_backup | default(false) if service is mapping else false }}"
-        bbs_stop_time: "{{ service.bbs_stop_time | default('01:00') if service is mapping else '01:00' }}"
-        bbs_start_time: "{{ service.bbs_start_time | default('01:15') if service is mapping else '01:15' }}"
       loop: "{{ enabled_services }}"
       loop_control:
         loop_var: service

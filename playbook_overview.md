@@ -16,7 +16,6 @@ ansible/
     ├── handlers/main.yml        # Handlers (Restart service, Reload systemd)
     ├── tasks/
     │   ├── main.yml             # Per-service orchestration
-    │   ├── install_bbs.yml      # BBS stop/start bracketing units (per-service)
     │   ├── install_bbs_scripts.yml # BBS agent pre/post-backup scripts (per-service)
     │   ├── install_service.yml  # Deploys static config files
     │   ├── install_secrets.yml  # Renders env.j2 secrets template
@@ -27,10 +26,6 @@ ansible/
         └── templates/               # Jinja2 templates
             ├── bbs_service_start.j2
             ├── bbs_service_stop.j2
-            ├── bbs_start_service.j2
-            ├── bbs_start_timer.j2
-            ├── bbs_stop_service.j2
-            ├── bbs_stop_timer.j2
             ├── tailscale.container.j2
             └── tailscale.env.j2
 ```
@@ -75,10 +70,6 @@ playbook.yml
         ├── install_sidecar.yml     → Tailscale container (if tailscale=true)
         ├── flush_handlers          → restart service if config/secrets changed
         └── systemd.yml             → enable/start (or stop) systemd units
-    └── if bbs_backup=true and bbs_use_agent_scripts=false:
-        install_bbs.yml → BBS stop/start .service/.timer pairs bracketing
-        the backup window (stop at bbs_stop_time, start at bbs_start_time);
-        enables and starts the timers
 │
 └── Install BBS agent scripts (once per host, when bbs_use_agent_scripts=true):
     install_bbs_scripts.yml → bbs-stop.sh / bbs-start.sh to
@@ -101,7 +92,6 @@ BBS (Borg Backup Server).
 | `install_quadlets.yml` | Copies `services/<name>/quadlets/` to `/etc/containers/systemd/<name>/`. Notifies `Restart service` on change. |
 | `install_sidecar.yml` | Creates Tailscale state dir, config dir, renders `tailscale.container` and `tailscale.env` templates. Runs only when `tailscale: true`. Validates that `serve.json` and auth key exist. |
 | `systemd.yml` | Runs `systemctl daemon-reload`, then enables each systemd unit and sets it to `started` or `stopped` based on `start_service`. |
-| `install_bbs.yml` | When `bbs_backup` is true and `bbs_use_agent_scripts` is false, renders `bbs-<host>-<service>-stop.{service,timer}` and `-start.{service,timer}` unit pairs (BBS can't stop/start services itself, so these bracket the backup window) and enables/starts the two timers. |
 | `install_bbs_scripts.yml` | When `bbs_use_agent_scripts` is true (host-level), installs `bbs-stop.sh` / `bbs-start.sh` (mode 0755) to `/usr/local/lib/bbs/`. The BBS shell-hook plugin config is per-client: attach it to any of that client's backup plans, and the agent runs the stop script before and the start script after each backup. The scripts parse `BBS_BACKUP_PLAN` (last `-`-delimited token) to stop/start only the service being backed up, and use `set -euo pipefail` so a failed stop aborts the backup. |
 
 ## Handlers
@@ -118,10 +108,7 @@ Set in `defaults/main.yml` (can be overridden per-service in `desktop.yml` as a 
 | Variable | Default | Description |
 |---|---|---|
 | `start_service` | `true` | Whether the systemd units are started (`true`) or stopped (`false`) |
-| `bbs_backup` | `false` | Whether this service is backed up by BBS (Borg Backup Server). When true, the service is stopped/started around the BBS-scheduled backup — either via systemd stop/start timer units or agent pre/post-backup scripts, depending on `bbs_use_agent_scripts`. |
-| `bbs_use_agent_scripts` | `false` | **Host-level** (set in `host_vars/<host>.yml`, not per-service). When true, installs the BBS agent stop/start scripts and skips the systemd timer units. The shell-hook plugin config is per-client, so one generic script pair handles every backup plan on the host. Leave the timer units installed as a fallback until the agent scripts are proven. |
-| `bbs_stop_time` | `"01:00"` | `OnCalendar` time for the BBS stop timer (only used when `bbs_use_agent_scripts` is false); the service must be stopped before the BBS-scheduled backup runs. |
-| `bbs_start_time` | `"01:15"` | `OnCalendar` time for the BBS start timer (only used when `bbs_use_agent_scripts` is false); restarts the service after the backup window. Keep the window wide enough for the backup to finish, or the service restarts mid-backup. |
+| `bbs_use_agent_scripts` | `false` | **Host-level** (set in `host_vars/<host>.yml`, not per-service). When true, installs the BBS agent stop/start scripts (`/usr/local/lib/bbs/`). The shell-hook plugin config is per-client, so one generic script pair handles every backup plan on the host. |
 | `pod_enabled` | `true` | Whether a pod quadlet wraps the service container |
 | `var_owner` | — | Recursively chown `<var_dir>` to this uid after seeding (with `var_group`, defaulting to `var_owner`). Set when the container runs as a non-root user so it can write its bind mounts. |
 | `tailscale_hostname` | `service_name` | Tailnet node name for the sidecar (`TS_HOSTNAME`). Override per-host so a service deployed on several hosts (e.g. `docker-socket-proxy` → `desktop-docker-proxy`) gets a unique `*.ts.net` name on each. |
@@ -171,7 +158,7 @@ playbook does this at the start of the containers play.
 2. Add the service name to `enabled_services` in the host's `host_vars/<host>.yml`:
    - As a plain string if all defaults apply: `- <name>`
    - As a dict with overrides if any differ from defaults: `- name: <name> start_service: false …`
-3. If the service is backed up by BBS (Borg Backup Server), set `bbs_backup: true` in the host vars dict.
+3. If the service is backed up by BBS (Borg Backup Server), attach the stop/start shell-hook scripts (see `install_bbs_scripts.yml`) to that client's backup plan in BBS.
 
 > **Note:** Seed data is copied as root, so any service whose container drops to a non-root user must set `var_owner`/`var_group` in its `defaults.yml` to match that user's uid/gid (e.g. `1000:1000` for jellyfin/homepage/vaultwarden/forgejo). The "Fix var directory ownership" task in `install_var.yml` then recursively chowns `<var_dir>` after seeding. For per-subdir ownership (e.g. searxng's valkey/cache), use `runtime_directories` entries with `owner`/`group` instead.
 

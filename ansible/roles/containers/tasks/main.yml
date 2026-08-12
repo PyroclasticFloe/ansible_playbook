@@ -61,7 +61,3 @@
 
 - name: Manage systemd service
   ansible.builtin.include_tasks: systemd.yml
-
-- name: Install BBS backup stop/start units
-  ansible.builtin.include_tasks: install_bbs.yml
-  when: bbs_backup | default(false) and not (bbs_use_agent_scripts | default(false))

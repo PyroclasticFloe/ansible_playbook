@@ -3,9 +3,6 @@ enabled_services:
     needs_backup: false
   - name: jellyfin
     needs_backup: false
-    bbs_backup: true
-    # bbs_stop_time: "23:00"
-    # bbs_start_time: "23:30"
   - name: borg-backup-server
     needs_backup: false
   - name: docker-socket-proxy
