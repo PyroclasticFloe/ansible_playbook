@@ -41,18 +41,17 @@
   - DNS over HTTPS/TLS in home network is a nice to have.
   - Base container wired: runs as 1000:1000, `AddCapability=CAP_NET_RAW` (image already file-caps `cap_net_bind_service`), no host port binds (web UI proxied via tailscale serve → 127.0.0.1:3000), DoT/DoH and serving DNS to the LAN still pending.
   - Certificate missing caused by tailscale upstream issue. AdGuardHome.yaml specifies the webui is on port 80, not 3000. The container is now working, needs to be added to MagicDNS. Delay DOH/DOT for now. **Done**
-
-## Pending
 - Homepage can't ping services on the tailnet. Example:
 ```
 podman exec -it systemd-homepage sh
 /app $ ping https://llama-swap.tail044fe.ts.net/
-```
   ping: socktype: SOCK_RAW
   ping: socket: Operation not permitted
   ping: => missing cap_net_raw+p capability or setuid?
 ```
-  Possibly the same solution as adguard home?
+  Added CAP_NET_RAW **Done**
+## Pending
+
 - Clean up the previous (borgmatic) backup system. The tasks and related files can probably be moved to a containers/old_tasks/old_backup directory.
  in the playbook and move them under the containers/old_tasks directory.
 - General cleanup. Look for any tasks, variables, files no longer used

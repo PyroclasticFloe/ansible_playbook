@@ -17,6 +17,8 @@ Environment=LOG_TARGETS=stdout
 
 Exec=sh -c "export HOSTNAME=0.0.0.0; exec node server.js"
 
+AddCapability=CAP_NET_RAW
+
 AutoUpdate=registry
 
 [Service]
