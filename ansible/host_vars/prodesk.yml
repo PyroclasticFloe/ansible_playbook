@@ -1,20 +1,12 @@
 enabled_services:
   - name: vaultwarden
-    needs_backup: false
   - name: forgejo
-    needs_backup: false
   - name: docker-socket-proxy
     tailscale_hostname: prodesk-docker-proxy
-    needs_backup: false
   - name: adguard-home
-    needs_backup: false
 
 
 # Agent scripts parse BBS_BACKUP_PLAN to stop/start the service being backed
 # up, so the per-service systemd timer bracketing units are skipped.
 bbs_use_agent_scripts: true
-
-# No backups yet; enable once the SSH automation key is registered on rsync.net
-# and prodesk is a stable backup writer.
-backup_enabled: false
 ansible_python_interpreter: /usr/bin/python3

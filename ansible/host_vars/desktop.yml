@@ -1,23 +1,15 @@
 enabled_services:
-  - name: searxng
-    needs_backup: false
-  - name: jellyfin
-    needs_backup: false
-  - name: borg-backup-server
-    needs_backup: false
+  - searxng
+  - jellyfin
+  - borg-backup-server
   - name: docker-socket-proxy
     tailscale_hostname: desktop-docker-proxy
-    needs_backup: false
-  - name: homepage
-    needs_backup: false
+  - homepage
   # - name: forgejo
-  #   needs_backup: false
   #   start_service: false
   # - name: vaultwarden
-  #   needs_backup: false
   #   start_service: false
   #   - name: adguard-home
-  #   needs_backup: false
   #   start_service: false
 
 # Socket proxies Homarr's Docker integration connects to (tailnet TCP).

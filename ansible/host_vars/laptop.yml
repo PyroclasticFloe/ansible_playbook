@@ -1,10 +1,5 @@
 enabled_services:
   - name: vaultwarden
-    needs_backup: false
     start_service: false
-    needs_restore: true
-    restore_time: "04:00"
-    restore_from_repo: "ssh://de5097@de5097.rsync.net/./vaultwarden"
-    restore_from_label: "prodesk-vaultwarden"
 is_gui: true
 ansible_python_interpreter: /usr/bin/python3

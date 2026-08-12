@@ -3,6 +3,5 @@ enabled_services:
   - llama-swap
   - name: docker-socket-proxy
     tailscale_hostname: server-docker-proxy
-    needs_backup: false
 is_nvidia: true
 ansible_python_interpreter: /usr/bin/python3
