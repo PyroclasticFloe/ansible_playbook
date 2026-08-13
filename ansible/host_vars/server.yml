@@ -4,4 +4,5 @@ enabled_services:
   - name: docker-socket-proxy
     tailscale_hostname: server-docker-proxy
 is_nvidia: true
+bbs_use_agent_scripts: true
 ansible_python_interpreter: /usr/bin/python3
