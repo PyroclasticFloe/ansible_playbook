@@ -3,7 +3,6 @@ cli_packages:
   - tailscale
   - borgbackup
   - borgmatic
-  - micro
   - uv
   - btop
   - duf
