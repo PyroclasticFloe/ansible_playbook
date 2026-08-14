@@ -8,11 +8,13 @@ Requires=nvidia-device-init.service
 [Container]
 Pod=llama-swap.pod
 
+User=1000:1000
+
 Image=ghcr.io/mostlygeek/llama-swap:cuda-non-root
 
 Volume=/home/aria/ai/models/llm/GGUF:/mnt/models:ro,z
 Volume=/etc/local_containers/llama-swap:/config:z
-Volume=/etc/local_containers/llama-swap/config.yaml:/app/config.yaml:z
+Volume=/var/lib/local_containers/llama-swap/config.yaml:/app/config.yaml:z
 
 AddDevice=nvidia.com/gpu=all
 
