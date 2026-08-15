@@ -10,7 +10,7 @@ Pod=llama-swap.pod
 
 User=1000:1000
 
-Image=ghcr.io/mostlygeek/llama-swap:cuda-non-root
+Image=ghcr.io/mostlygeek/llama-swap:unified-cuda-rootless
 
 Volume=/home/aria/ai/models/llm/GGUF:/mnt/models:ro,z
 Volume=/etc/local_containers/llama-swap:/config:z
