@@ -1,0 +1,13 @@
+[Unit]
+Description={{ service_name }} Pod
+
+[Pod]
+PodName={{ service_name }}
+
+Network=bridge
+
+DNS=100.100.100.100
+DNSSearch=tail044fe.ts.net
+
+[Install]
+WantedBy=multi-user.target
