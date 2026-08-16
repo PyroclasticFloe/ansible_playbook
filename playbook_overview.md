@@ -26,6 +26,7 @@ ansible/
         └── templates/               # Jinja2 templates
             ├── bbs_service_start.j2
             ├── bbs_service_stop.j2
+            ├── service.pod.j2       # Generates the per-service pod quadlet
             ├── tailscale.container.j2
             └── tailscale.env.j2
 ```
@@ -36,7 +37,7 @@ services/
 │   ├── defaults.yml             # Service-level Ansible vars (tailscale, runtime_directories, …)
 │   ├── etc/                     # Static config files → /etc/local_containers/<name>/
 │   ├── var/                     # Runtime data seeds → /var/lib/local_containers/<name>/
-│   ├── quadlets/                # Podman .container/.pod files → /etc/containers/systemd/<name>/
+│   ├── quadlets/                # Podman .container files (the .pod file is templated) → /etc/containers/systemd/<name>/
 │   └── env.j2                   # (Optional) secrets template → <etc_dir>/<name>.env
 ```
 
@@ -66,7 +67,7 @@ playbook.yml
         ├── install_service.yml     → create etc_dir, copy static config
         ├── install_secrets.yml     → render env.j2 if present
         ├── install_var.yml         → create var_dir, seed runtime data
-        ├── install_quadlets.yml    → deploy .container/.quadlet files
+        ├── install_quadlets.yml    → deploy .container files + template .pod file
         ├── install_sidecar.yml     → Tailscale container (if tailscale=true)
         ├── flush_handlers          → restart service if config/secrets changed
         └── systemd.yml             → enable/start (or stop) systemd units
@@ -89,7 +90,7 @@ BBS (Borg Backup Server).
 | `install_service.yml` | Creates `<etc_dir>` and copies files from `services/<name>/etc/` into it. Notifies `Restart service` handler on change. |
 | `install_secrets.yml` | If `services/<name>/env.j2` exists, renders it to `<etc_dir>/<name>.env` (mode 0600). Notifies `Restart service` on change. |
 | `install_var.yml` | Creates `<var_dir>` and any extra `runtime_directories` listed in the service's defaults.yml. Seeds data from `services/<name>/var/` (won't overwrite existing files). `runtime_directories` is captured per-service into `service_runtime_directories` in `main.yml` so a value from one service (e.g. searxng's `valkey`) doesn't leak into others via `include_vars` play-scope persistence. Runtime subdirs are created *after* seeding so the seed step's `--chown=root:root` can't overwrite the non-root ownership they need (e.g. valkey uid 999, searxng uid 977). |
-| `install_quadlets.yml` | Copies `services/<name>/quadlets/` to `/etc/containers/systemd/<name>/`. Notifies `Restart service` on change. |
+| `install_quadlets.yml` | Copies `services/<name>/quadlets/*.container` to `/etc/containers/systemd/<name>/`, then templates the `<name>.pod` file from `service.pod.j2` (bridged network + Tailscale MagicDNS). Notifies `Restart service` on change. |
 | `install_sidecar.yml` | Creates Tailscale state dir, config dir, renders `tailscale.container` and `tailscale.env` templates. Runs only when `tailscale: true`. Validates that `serve.json` and auth key exist. |
 | `systemd.yml` | Runs `systemctl daemon-reload`, then enables each systemd unit and sets it to `started` or `stopped` based on `start_service`. |
 | `install_bbs_scripts.yml` | When `bbs_use_agent_scripts` is true (host-level), installs `bbs-stop.sh` / `bbs-start.sh` (mode 0755) to `/usr/local/lib/bbs/`. The BBS shell-hook plugin config is per-client: attach it to any of that client's backup plans, and the agent runs the stop script before and the start script after each backup. The scripts parse `BBS_BACKUP_PLAN` (last `-`-delimited token) to stop/start only the service being backed up, and use `set -euo pipefail` so a failed stop aborts the backup. |
@@ -153,7 +154,7 @@ playbook does this at the start of the containers play.
    - **`defaults.yml`** — set at least `tailscale: true` if needed, plus any `runtime_directories` entries
    - **`etc/`** — static files that get copied to `/etc/local_containers/<name>/`
    - **`var/`** — seed data for `/var/lib/local_containers/<name>/` (copied once, won't overwrite existing)
-   - **`quadlets/`** — podman quadlet files (`.container`, `.pod`, etc.)
+   - **`quadlets/`** — podman quadlet `.container` files (the `<name>.pod` file is templated from the role's `service.pod.j2`, not stored here)
    - **`env.j2`** (optional) — Jinja2 template rendered to `<name>.env` with mode `0600`; reference vault variables here
 2. Add the service name to `enabled_services` in the host's `host_vars/<host>.yml`:
    - As a plain string if all defaults apply: `- <name>`

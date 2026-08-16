@@ -50,6 +50,8 @@ podman exec -it systemd-homepage sh
   ping: => missing cap_net_raw+p capability or setuid?
 ```
   Added CAP_NET_RAW **Done**
+- Template the per-service `.pod` quadlet files from a single role template (`service.pod.j2`) instead of shipping a copy per service. The template adds `DNS=100.100.100.100` + `DNSSearch={{ tailnet_domain }}` (Tailscale MagicDNS) to every pod to fix DNS resolution in services. `install_quadlets.yml` now copies only `*.container` files and templates the pod; the per-service `services/*/quadlets/*.pod` files were deleted. **Done**
+
 ## Pending
 
 - Clean up the previous (borgmatic) backup system. Moved `install_borgmatic.yml` and its 8 templates to `old_tasks/old_backup/`, removed the borgmatic `include_role` block and per-service borgmatic var-passing from `playbook.yml`, and dropped the borgmatic-only defaults/group vars (`needs_backup`, `needs_restore`, `restore_time`, `backup_frequency`, `backup_time`, `rsync_net_login`, `backup_enabled`). **Done**

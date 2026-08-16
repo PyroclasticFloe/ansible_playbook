@@ -7,11 +7,22 @@
     group: root
     mode: "0755"
 
-- name: Install quadlet files
+- name: Install quadlet container files
   ansible.builtin.copy:
-    src: "{{ service_dir }}/quadlets/"
+    src: "{{ item }}"
     dest: "{{ quadlet_dir }}/"
     owner: root
     group: root
     mode: preserve
+  loop: "{{ query('fileglob', service_dir ~ '/quadlets/*.container') }}"
+  notify: Restart service
+
+- name: Install quadlet pod file
+  ansible.builtin.template:
+    src: service.pod.j2
+    dest: "{{ quadlet_dir }}/{{ service_name }}.pod"
+    owner: root
+    group: root
+    mode: "0644"
+  when: pod_enabled | default(true)
   notify: Restart service
