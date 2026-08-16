@@ -1,6 +1,6 @@
 ---
 enabled_services:
-  - llama-swap
+  # - llama-swap
   - name: docker-socket-proxy
     tailscale_hostname: server-docker-proxy
 is_nvidia: true
