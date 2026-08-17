@@ -12,6 +12,8 @@ Image=ghcr.io/open-webui/open-webui:latest
 
 Volume=/var/lib/local_containers/open-webui/data:/app/backend/data:Z
 
+EnvironmentFile=/var/lib/local_containers/open-webui/open-webui.env
+
 AutoUpdate=registry
 
 [Service]
