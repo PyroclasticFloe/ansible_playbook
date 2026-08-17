@@ -2,6 +2,7 @@ enabled_services:
   - searxng
   - jellyfin
   - borg-backup-server
+  - open-webui
   - name: docker-socket-proxy
     tailscale_hostname: desktop-docker-proxy
   - homepage
