@@ -13,6 +13,8 @@ Image=ghcr.io/open-webui/open-terminal:latest
 
 Volume=/home/aria/ai/ow-terminal:/home/user:rw,Z
 
+EnvironmentFile=/var/lib/local_containers/open-webui/terminal.env
+
 AutoUpdate=registry
 
 [Service]
