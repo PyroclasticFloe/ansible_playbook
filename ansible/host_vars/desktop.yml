@@ -3,6 +3,8 @@ enabled_services:
   - jellyfin
   - borg-backup-server
   - open-webui
+  - open-terminal
+  - open-computer
   - name: docker-socket-proxy
     tailscale_hostname: desktop-docker-proxy
   - homepage
