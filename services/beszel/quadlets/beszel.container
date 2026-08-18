@@ -1,0 +1,19 @@
+[Unit]
+Description=Beszel Monitoring
+StartLimitIntervalSec=30
+StartLimitBurst=10
+
+
+[Container]
+Pod=beszel.pod
+
+
+Image=docker.io/henrygd/beszel:latest
+
+Volume=/var/lib/local_containers/beszel/data:/beszel_data:rw,Z
+
+AutoUpdate=registry
+
+[Service]
+Restart=always
+RestartSec=5
