@@ -11,6 +11,7 @@ User=1000:1000
 
 Image=ghcr.io/open-webui/computer:latest
 
+Volume=/var/lib/local_containers/open-computer/data:/data:rw,Z
 Volume=/home/aria/ai/ow-computer:/workspace:rw,Z
 Volume=/home/aria/ai/outbox:/workspace/outbox:rw,Z
 Volume=/home/aria/inbox:/workspace/inbox:ro,Z
