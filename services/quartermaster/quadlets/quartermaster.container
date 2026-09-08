@@ -14,6 +14,7 @@ Image=ghcr.io/quartermaster-labs/quartermaster:latest
 
 Volume=/var/lib/local_containers/quartermaster/data:/data:Z
 Volume=/home/aria/ai/models:/data/models:Z
+Volume=/home/aria/projects/llama.cpp/build/bin:/opt/llama-cpp:ro,Z
 
 AddDevice=nvidia.com/gpu=all
 
