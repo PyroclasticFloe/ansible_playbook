@@ -8,7 +8,7 @@ Pod=open-webui.pod
 
 User=1000:1000
 
-Image=ghcr.io/open-webui/open-webui:latest
+Image=ghcr.io/open-webui/open-webui:dev
 
 Volume=/var/lib/local_containers/open-webui/data:/app/backend/data:Z
 
