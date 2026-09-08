@@ -2,6 +2,8 @@
 Description=Quartermaster
 StartLimitIntervalSec=30
 StartLimitBurst=10
+After=nvidia-device-init.service
+Requires=nvidia-device-init.service
 
 [Container]
 Pod=quartermaster.pod
@@ -12,6 +14,13 @@ Image=ghcr.io/quartermaster-labs/quartermaster:latest
 
 Volume=/var/lib/local_containers/quartermaster/data:/data:Z
 Volume=/home/aria/ai/models:/data/models:Z
+
+AddDevice=nvidia.com/gpu=all
+
+HealthCmd=nvidia-smi || exit 1
+HealthInterval=30s
+HealthTimeout=10s
+HealthRetries=3
 
 AutoUpdate=registry
 
