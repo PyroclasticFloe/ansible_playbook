@@ -1,6 +1,6 @@
 ---
 enabled_services:
-  # - llama-swap
+  - llama-swap
   # - quartermaster
   - name: docker-socket-proxy
     tailscale_hostname: server-docker-proxy
