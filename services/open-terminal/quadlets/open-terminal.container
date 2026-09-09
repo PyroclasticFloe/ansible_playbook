@@ -18,5 +18,5 @@ EnvironmentFile=/var/lib/local_containers/open-webui/terminal.env
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 RestartSec=5

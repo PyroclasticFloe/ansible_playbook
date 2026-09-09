@@ -19,5 +19,5 @@ Volume=/home/aria/inbox:/workspace/inbox:ro,Z
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 RestartSec=5

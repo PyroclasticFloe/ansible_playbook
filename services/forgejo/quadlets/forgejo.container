@@ -19,7 +19,7 @@ Environment=FORGEJO__server__SSH_DOMAIN=forgejo.tail044fe.ts.net
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 
 [Install]
 WantedBy=multi-user.target

@@ -27,7 +27,7 @@ AddDevice=/dev/net/tun
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 
 [Install]
 WantedBy=default.target

@@ -15,4 +15,4 @@ Environment=JELLYFIN_PublishedServerUrl=https://jellyfin.tail044fe.ts.net
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped

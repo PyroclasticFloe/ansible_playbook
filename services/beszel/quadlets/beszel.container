@@ -15,5 +15,5 @@ Volume=/var/lib/local_containers/beszel/data:/beszel_data:rw,Z
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 RestartSec=5

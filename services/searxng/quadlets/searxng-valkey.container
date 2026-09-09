@@ -13,4 +13,4 @@ Volume=/var/lib/local_containers/searxng/valkey:/data:Z
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped

@@ -26,5 +26,5 @@ HealthRetries=3
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 RestartSec=5

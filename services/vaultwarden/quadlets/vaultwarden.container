@@ -20,7 +20,7 @@ Environment=DOMAIN=https://vaultwarden.tail044fe.ts.net/
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
 
 [Install]
 WantedBy=multi-user.target

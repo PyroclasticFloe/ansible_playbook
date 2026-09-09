@@ -20,4 +20,4 @@ Volume=/var/lib/local_containers/adguard-home/config:/opt/adguardhome/conf:Z
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped

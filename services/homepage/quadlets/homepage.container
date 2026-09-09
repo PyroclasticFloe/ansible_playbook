@@ -22,4 +22,4 @@ AddCapability=CAP_NET_RAW
 AutoUpdate=registry
 
 [Service]
-Restart=always
+Restart=unless-stopped
