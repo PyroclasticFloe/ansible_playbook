@@ -2,7 +2,7 @@ enabled_services:
   - searxng
   - jellyfin
   - borg-backup-server
-  - karakeep
+  #- karakeep
   - open-webui
   - open-terminal
   - open-computer

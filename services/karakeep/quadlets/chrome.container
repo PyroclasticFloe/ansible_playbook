@@ -4,8 +4,7 @@ Description=Karakeep requirement
 [Container]
 ContainerName=karakeep-chrome
 
-Image=gcr.io/zenika-hub/alpine-chrome:release
-
+Image=ghcr.io/karakeep-app/karakeep-chrome:release
 User=1000:1000
 
 Pod=karakeep.pod
