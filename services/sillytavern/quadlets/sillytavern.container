@@ -1,0 +1,28 @@
+[Unit]
+Description=Silly Tavern AI 
+StartLimitIntervalSec=30
+StartLimitBurst=10
+
+[Container]
+Pod=sillytavern.pod
+
+ContainerName=sillytavern
+
+User=1000:1000
+
+Image=ghcr.io/sillytavern/sillytavern:latest
+
+Volume=/var/lib/local_containers/sillytavern/data:/home/node/app/data:rw,Z
+Volume=/var/lib/local_containers/sillytavern/config:/home/node/app/config:rw,Z
+Volume=/var/lib/local_containers/sillytavern/plugins:/home/node/app/plugins:rw,Z
+Volume=/var/lib/local_containers/sillytavern/extensions:/home/node/app/extensions:rw,Z
+
+Environment=NODE_ENV=production
+Environment=FORCE_COLOR=1
+Environment=SILLYTAVERN_WHITELIST='["127.0.0.1", "100.110.32.44"]'
+
+AutoUpdate=registry
+
+[Service]
+Restart=unless-stopped
+RestartSec=5
