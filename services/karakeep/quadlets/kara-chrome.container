@@ -9,13 +9,9 @@ ContainerName=kara-chrome
 
 Image=ghcr.io/karakeep-app/karakeep-chrome:release
 
-Exec=--disable-gpu
-Exec=--disable-dev-shm-usage
-Exec=--hide-scrollbars
-Exec=--disable-blink-features=AutomationControlled
-Exec=--window-size=1440,900
+Exec=--disable-gpu --disable-dev-shm-usage --hide-scrollbars --disable-blink-features=AutomationControlled --window-size=1440,900
 
-Init=true
+PodmanArgs=--init
 
 AutoUpdate=registry
 
