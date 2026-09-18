@@ -51,6 +51,8 @@ podman exec -it systemd-homepage sh
 ```
   Added CAP_NET_RAW **Done**
 - Template the per-service `.pod` quadlet files from a single role template (`service.pod.j2`) instead of shipping a copy per service. The template adds `DNS=100.100.100.100` + `DNSSearch={{ tailnet_domain }}` (Tailscale MagicDNS) to every pod to fix DNS resolution in services. `install_quadlets.yml` now copies only `*.container` files and templates the pod; the per-service `services/*/quadlets/*.pod` files were deleted. **Done**
+- Fix Karakeep 502 on the tailnet. Next.js was binding the container hostname (`karakeep`) instead of localhost, so the Tailscale sidecar's `127.0.0.1:3000` proxy got connection refused. Set `HOSTNAME=0.0.0.0` + `PORT=3000` and `NEXTAUTH_URL=https://karakeep.tail044fe.ts.net` in `karakeep.container`. Also fixed `meilisearch.container`: fully-qualified image (`docker.io/getmeili/meilisearch`, required with `AutoUpdate=registry`) and unquoted `MEILI_NO_ANALYTICS=true`. Karakeep secrets (`NEXTAUTH_SECRET`, `MEILI_MASTER_KEY`) stay in the manually-managed `/etc/local_containers/karakeep/karakeep.env`, never committed. **Done**
+- Prune stale quadlet files on deploy. Renamed quadlets (e.g. Karakeep's `chrome.container` → `kara-chrome.container`) used to linger in `/etc/containers/systemd/<name>/` because the playbook only copies. `install_quadlets.yml` now deletes any deployed `*.container`/`*.pod` not in the expected set. **Done**
 
 ## Pending
 

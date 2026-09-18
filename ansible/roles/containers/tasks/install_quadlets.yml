@@ -26,3 +26,32 @@
     mode: "0644"
   when: pod_enabled | default(true)
   notify: Restart service
+
+- name: Build list of expected quadlet files
+  ansible.builtin.set_fact:
+    expected_quadlets: >-
+      {{
+        query('fileglob', service_dir ~ '/quadlets/*.container')
+        | map('basename') | list
+        + ([service_name ~ '.pod'] if (pod_enabled | default(true)) else [])
+        + ([service_name ~ '-tailscale.container'] if (tailscale | default(false)) else [])
+      }}
+
+- name: Find deployed quadlet files
+  ansible.builtin.find:
+    paths: "{{ quadlet_dir }}"
+    patterns:
+      - "*.container"
+      - "*.pod"
+    file_type: file
+  register: deployed_quadlets
+
+- name: Remove stale quadlet files left by renames
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ deployed_quadlets.files }}"
+  when: (item.path | basename) not in expected_quadlets
+  notify:
+    - Reload systemd
+    - Restart service

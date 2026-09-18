@@ -13,9 +13,11 @@ Volume=/var/lib/local_containers/karakeep/data:/data:rw,z
 
 EnvironmentFile=/etc/local_containers/karakeep/karakeep.env
 Environment=DATA_DIR=/data
-Environment=MEILI_ADDR=http://kara-meilisearch:7700
-Environment=NEXTAUTH_URL=http://localhost:3000
-Environment=BROWSER_WEB_URL: http://kara-chrome:9222
+Environment=MEILI_ADDR=http://127.0.0.1:7700
+Environment=NEXTAUTH_URL=https://karakeep.tail044fe.ts.net
+Environment=BROWSER_WEB_URL=http://127.0.0.1:9222
+Environment=HOSTNAME=0.0.0.0
+Environment=PORT=3000
 
 AutoUpdate=registry
 
