@@ -2,6 +2,7 @@ enabled_services:
   - searxng
   - jellyfin
   - borg-backup-server
+  - karakeep
   - sillytavern
   - open-webui
   - open-terminal
@@ -16,12 +17,13 @@ enabled_services:
   #   - name: adguard-home
   #   start_service: false
 
-# Socket proxies Homarr's Docker integration connects to (tailnet TCP).
-homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"
-homarr_docker_ports: "2375,2375,2375"
 is_gui: true
 
 # Agent scripts parse BBS_BACKUP_PLAN to stop/start the service being backed
 # up, so the per-service systemd timer bracketing units are skipped.
 bbs_use_agent_scripts: true
 ansible_python_interpreter: /usr/bin/python3
+
+# Socket proxies Homarr's Docker integration connects to (tailnet TCP).
+# homarr_docker_hostnames: "desktop-docker-proxy.{{ tailnet_domain }},server-docker-proxy.{{ tailnet_domain }},prodesk-docker-proxy.{{ tailnet_domain }}"
+# homarr_docker_ports: "2375,2375,2375"
