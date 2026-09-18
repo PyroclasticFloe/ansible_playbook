@@ -1,0 +1,24 @@
+[Unit]
+Description=Chrome for Karakeep
+StartLimitIntervalSec=30
+StartLimitBurst=10
+
+[Container]
+Pod=karakeep.pod
+ContainerName=kara-chrome
+
+Image=ghcr.io/karakeep-app/karakeep-chrome:release
+
+Exec=--disable-gpu
+Exec=--disable-dev-shm-usage
+Exec=--hide-scrollbars
+Exec=--disable-blink-features=AutomationControlled
+Exec=--window-size=1440,900
+
+Init=true
+
+AutoUpdate=registry
+
+[Service]
+Restart=unless-stopped
+RestartSec=5

@@ -1,0 +1,21 @@
+[Unit]
+Description=Karakeep Search
+StartLimitIntervalSec=30
+StartLimitBurst=10
+
+[Container]
+Pod=karakeep.pod
+ContainerName=kara-meilisearch
+
+Image=getmeili/meilisearch:v1.41.0
+
+Volume=/var/lib/local_containers/karakeep/meili-data:/meili_data:rw,z
+
+EnvironmentFile=/etc/local_containers/karakeep/karakeep.env
+Environment=MEILI_NO_ANALYTICS: "true"
+
+AutoUpdate=registry
+
+[Service]
+Restart=unless-stopped
+RestartSec=5
