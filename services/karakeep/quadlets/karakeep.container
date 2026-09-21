@@ -18,6 +18,15 @@ Environment=NEXTAUTH_URL=https://karakeep.tail044fe.ts.net
 Environment=BROWSER_WEB_URL=http://127.0.0.1:9222
 Environment=HOSTNAME=0.0.0.0
 Environment=PORT=3000
+Environment=DISABLE_SIGNUPS=true
+Environment=OPENAI_BASE_URL=https://server.tail044fe.ts.net
+Environment=INFERENCE_TEXT_MODEL=boulesis-26b-a4b
+Environment=INFERENCE_IMAGE_MODEL=boulesis-26b-a4b
+Environment=EMBEDDING_ENABLE_AUTO_INDEXING=true
+Environment=EMBEDDING_TEXT_MODEL=embeddinggemma-300m-q8_0
+Environment=EMBEDDING_DIMENSIONS=768
+Environment=OCR_USE_LLM=true
+
 
 AutoUpdate=registry
 
